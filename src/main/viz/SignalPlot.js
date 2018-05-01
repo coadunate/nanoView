@@ -19,7 +19,6 @@ import dataCanvas from 'data-canvas';
 import d3utils from './d3utils';
 import TiledCanvas from './TiledCanvas';
 import _ from 'underscore';
-import style from '../style';
 
 var READ_COLORS = [
   "#F5A9A9",
@@ -111,24 +110,24 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
         }
       }
 
-      for(var pos = start+1; pos <= stop; pos++){
+      for(var pos1 = start+1; pos1 <= stop; pos1++){
 
         ctx.save();
-        ctx.pushObject({pos});
+        ctx.pushObject({pos1});
 
         // plot the base-called points.
         ctx.fillStyle = "red";
         ctx.beginPath();
-        ctx.arc(scale(1+pos + 0.5), yScale(sub_events[pos-start][0][1]), 3, 0,2*Math.PI);
+        ctx.arc(scale(1+pos1 + 0.5), yScale(sub_events[pos1-start][0][1]), 3, 0,2*Math.PI);
         ctx.closePath();
         ctx.fill();
 
         if(!hideNonBaseCalled){
-          // plot the ret of non-basecalled points if you're supposed to
-          for(var n = 1; n < sub_events[pos-start].length; n++){
+          // plot the ret of non-basecalled points if you're suppos1ed to
+          for(var n1 = 1; n1 < sub_events[pos1-start].length; n1++){
             ctx.fillStyle = "gray";
             ctx.beginPath();
-            ctx.arc(scale(1+pos + 0.5 + (sub_events[pos-start][n][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][n][1]), 3, 0,2*Math.PI);
+            ctx.arc(scale(1+pos1 + 0.5 + (sub_events[pos1-start][n1][0] - sub_events[pos1-start][0][0]) ), yScale(sub_events[pos1-start][n1][1]), 3, 0,2*Math.PI);
             ctx.closePath();
             ctx.fill();
           }
@@ -295,7 +294,6 @@ SignalPlot.getOptionsMenu = function(options: Object): any {
   ];
 };
 
-var messageId = 1;
 
 SignalPlot.handleSelectOption = function(key: string, oldOptions: Object): Object {
   var opts = _.clone(oldOptions);
