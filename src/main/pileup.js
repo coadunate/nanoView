@@ -29,6 +29,7 @@ import GA4GHVariantSource from './sources/GA4GHVariantSource';
 import GA4GHFeatureSource from './sources/GA4GHFeatureSource';
 
 // Visualizations
+import SignalPlot from './viz/SignalPlot';
 import CoverageTrack from './viz/CoverageTrack';
 import GenomeTrack from './viz/GenomeTrack';
 import GeneTrack from './viz/GeneTrack';
@@ -48,6 +49,7 @@ type GenomeRange = {
 type Pileup = {
   setRange(range: GenomeRange): void;
   getRange(): GenomeRange;
+  getTrack(): PileupTrack;
   destroy(): void;
 }
 
@@ -139,6 +141,12 @@ function create(elOrId: string|Element, params: PileupParams): Pileup {
       }
       return _.clone(reactElement.state.range);
     },
+    getTrack(): PileupTrack {
+      if(reactElement === null){
+        throw 'Cannot call setRange on a destroyed pileup';
+      }
+      return _.clone(reactElement.state);
+    },
     destroy(): void {
       if (!vizTracks) {
         throw 'Cannot call destroy() twice on the same pileup';
@@ -184,6 +192,7 @@ var pileup = {
     empty: EmptySource.create
   },
   viz: {
+    signalplot: makeVizObject(SignalPlot),
     coverage: makeVizObject(CoverageTrack),
     genome:   makeVizObject(GenomeTrack),
     genes:    makeVizObject(GeneTrack),

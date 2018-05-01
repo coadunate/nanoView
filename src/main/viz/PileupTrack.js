@@ -29,9 +29,21 @@ import canvasUtils from './canvas-utils';
 import dataCanvas from 'data-canvas';
 import style from '../style';
 
+var READ_COLORS = [
+  "#F5A9A9",
+  "#F3E2A9",
+  "#BEF781",
+  "#81F79F",
+  "#81F7D8",
+  "#58ACFA",
+  "#8258FA",
+  "#9A2EFE",
+  "#FE2EF7"
+];
+
 
 var READ_HEIGHT = 13;
-var READ_SPACING = 2;  // vertical pixels between reads
+var READ_SPACING = 12;  // vertical pixels between reads
 
 var READ_STRAND_ARROW_WIDTH = 5;
 
@@ -53,6 +65,7 @@ class PileupTiledCanvas extends TiledCanvas {
   update(newOptions: Object) {
     this.options = newOptions;
   }
+
 
   heightForRef(ref: string): number {
     return this.cache.pileupHeightForRef(ref) *
@@ -148,7 +161,7 @@ function renderPileup(ctx: DataCanvasRenderingContext2D,
     }
   }
 
-  function drawAlignment(vRead: VisualAlignment, y: number) {
+  function drawAlignment(vRead: VisualAlignment, y: number, idx: number) {
     ctx.pushObject(vRead);
     ctx.save();
     if (colorByStrand) {
@@ -166,7 +179,7 @@ function renderPileup(ctx: DataCanvasRenderingContext2D,
     ctx.popObject();
   }
 
-  function drawGroup(vGroup: VisualGroup) {
+  function drawGroup(vGroup: VisualGroup, idx: number) {
     ctx.save();
     if (insertStats && vGroup.insert) {
       var len = vGroup.span.length();
@@ -175,10 +188,12 @@ function renderPileup(ctx: DataCanvasRenderingContext2D,
       } else if (len > insertStats.maxOutlierSize) {
         ctx.fillStyle = 'red';
       } else {
-        ctx.fillStyle = style.ALIGNMENT_COLOR;
+        // ctx.fillStyle = style.ALIGNMENT_COLOR;
+        ctx.fillStyle = READ_COLORS[idx];
       }
     } else {
-      ctx.fillStyle = style.ALIGNMENT_COLOR;
+      // ctx.fillStyle = style.ALIGNMENT_COLOR;
+      ctx.fillStyle = READ_COLORS[idx];
     }
     var y = yForRow(vGroup.row);
     ctx.pushObject(vGroup);
@@ -188,7 +203,7 @@ function renderPileup(ctx: DataCanvasRenderingContext2D,
           x2 = scale(span.stop + 1);
       ctx.fillRect(x1, y + READ_HEIGHT / 2 - 0.5, x2 - x1, 1);
     }
-    vGroup.alignments.forEach(vRead => drawAlignment(vRead, y));
+    vGroup.alignments.forEach((vRead,idx) => drawAlignment(vRead, y, idx));
     ctx.popObject();
     ctx.restore();
   }
@@ -213,7 +228,7 @@ function renderPileup(ctx: DataCanvasRenderingContext2D,
   }
 
   ctx.font = style.TIGHT_TEXT_STYLE;
-  vGroups.forEach(vGroup => drawGroup(vGroup));
+  vGroups.forEach((vGroup,idx) => drawGroup(vGroup,idx));
 }
 
 
@@ -249,7 +264,8 @@ class PileupTrack extends React.Component {
   constructor(props: VizProps) {
     super(props);
     this.state = {
-      networkStatus: null
+      networkStatus: null,
+      clicked: null
     };
   }
 
@@ -475,9 +491,12 @@ class PileupTrack extends React.Component {
     renderPileup(trackingCtx, scale, range, null, false, vGroups);
     var vRead = _.find(trackingCtx.hits[0], hit => hit.read);
     var alert = window.alert || console.log;
-    if (vRead) {
-      alert(vRead.read.debugString());
-    }
+    //alert("REMOVED");
+    this.state.clicked = vRead.read.name;
+    // MODIFIED: Remove the alert
+    // if (vRead) {
+    //   alert(vRead.read.debugString());
+    // }
   }
 }
 

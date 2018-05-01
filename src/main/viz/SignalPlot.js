@@ -61,9 +61,9 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
       }
 
       // PLOT SIGNAL PATH
-      
+
       ctx.beginPath();
-      ctx.moveTo(scale(1+start + 0.5), yScale(sub_events[start-start][0][1]))
+      ctx.moveTo(scale(1+start + 0.5), yScale(sub_events[start-start][0][1]));
       // Plot the non-basecalled path.
       for(var n = 1; n < sub_events[start-start].length; n++){
         ctx.lineTo(scale(1+start + 0.5 + (sub_events[start-start][n][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][n][1]));
@@ -74,10 +74,10 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
         ctx.pushObject({pos});
 
         ctx.lineTo(scale(1+pos+0.5), yScale(sub_events[pos-start][0][1]));
-        
+
         // Plot the non-basecalled path.
-        for(var n = 1; n < sub_events[pos-start].length; n++){
-          ctx.lineTo(scale(1+pos + 0.5 +  (sub_events[pos-start][n][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][n][1]));
+        for(var p = 1; p < sub_events[pos-start].length; p++){
+          ctx.lineTo(scale(1+pos + 0.5 +  (sub_events[pos-start][p][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
         }
         ctx.strokeStyle=READ_COLORS[read_num-1];
         ctx.lineWidth=lWidth;
@@ -97,22 +97,22 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
       ctx.arc(scale(1+start + 0.5), yScale(sub_events[start-start][0][1]), 3, 0,2*Math.PI);
       ctx.closePath();
       ctx.fill();
-      
+
 
       if(!hideNonBaseCalled){
 
         // plot the starting non-basecalled points if you're supposed to.
-        for(var n = 1; n < sub_events[start-start].length; n++){
+        for(var q = 1; q < sub_events[start-start].length; q++){
           ctx.fillStyle="gray";
           ctx.beginPath();
-          ctx.arc(scale(1+start + 0.5 + (sub_events[start-start][n][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][n][1]), 3, 0,2*Math.PI);
+          ctx.arc(scale(1+start + 0.5 + (sub_events[start-start][q][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][q][1]), 3, 0,2*Math.PI);
           ctx.closePath();
           ctx.fill();
         }
       }
 
       for(var pos = start+1; pos <= stop; pos++){
-        
+
         ctx.save();
         ctx.pushObject({pos});
 
@@ -122,7 +122,7 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
         ctx.arc(scale(1+pos + 0.5), yScale(sub_events[pos-start][0][1]), 3, 0,2*Math.PI);
         ctx.closePath();
         ctx.fill();
-        
+
         if(!hideNonBaseCalled){
           // plot the ret of non-basecalled points if you're supposed to
           for(var n = 1; n < sub_events[pos-start].length; n++){
@@ -139,7 +139,7 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
       }
 
     }
-    
+
   }
 
 }
@@ -152,12 +152,12 @@ class SignalPlotCanvas extends TiledCanvas {
   getEventData(range: GenomeRange) {
     var result = [];
     var xhttp = new XMLHttpRequest();
-    
+
     xhttp.open("GET", "http://127.0.0.1:5000/getrange/start=" + range.start + "&end=" + (range.stop+1) + "&name=tt", false);
     xhttp.onload = function() {
       result = JSON.parse(xhttp.responseText);
 
-    }
+    };
     xhttp.send();
     return result;
     // event.preventDefault();
@@ -280,7 +280,7 @@ SignalPlot.displayName = 'signalplot';
 
 SignalPlot.displayName = 'signalplot';
 SignalPlot.defaultOptions = {
-  
+
   hideNonBaseCalled: false,
   ThinSignalLine: true,
   ThickSignalLine: false
