@@ -489,8 +489,8 @@ class PileupTrack extends React.Component {
         vGroups = this.cache.getGroupsOverlapping(range);
 
     renderPileup(trackingCtx, scale, range, null, false, vGroups);
-    var vRead = _.find(trackingCtx.hits[0], hit => hit.read);
-    var alert = window.alert || console.log;
+    //var vRead = _.find(trackingCtx.hits[0], hit => hit.read);
+    //var alert = window.alert || console.log;
     //alert("REMOVED");
     this.state.clicked = vRead.read.name;
     // MODIFIED: Remove the alert
