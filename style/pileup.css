@@ -144,10 +144,10 @@
   text-anchor: middle;
 }
 .loose text {
-  font-size: 24;
+  font-size: 20;
 }
 .tight text {
-  font-size: 12;
+  font-size: 6;
   font-weight: bold;
 }
 
@@ -186,6 +186,14 @@
   flex-basis: auto;
   min-height: 300px; /* prevent tracks from becoming too small */
 }
+
+/* pileup track */
+.pileup-root > .signalplot {
+  flex: 1;  /* stretch to fill remaining space */
+  flex-basis: auto;
+  min-height: 250px; /* prevent tracks from becoming too small */
+}
+
 .pileup .alignment .match {
   fill: #c8c8c8;  /* matches IGV */
 }
@@ -273,6 +281,19 @@
 }
 .location .location-label {
   color: black;
+  font-size: smaller;
+  text-anchor: start;
+  dominant-baseline: central;
+}
+
+
+/* signalplot track */
+.pileup-root > .signalplot {
+  flex: 0 0 100px !important; /* fixed height */
+}
+
+.signalplot .signalplot-label {
+  color: red !important;
   font-size: smaller;
   text-anchor: start;
   dominant-baseline: central;
