@@ -1,5 +1,5 @@
-# Product Name
-> Short blurb about what your product does.
+# nanoView
+> Data Visualization tool for nanopore sequencing data.
 
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
@@ -7,21 +7,34 @@
 
 One to two paragraph statement about your product and what it does.
 
-![](header.png)
+![](https://github.com/dbader/readme-template/raw/master/header.png)
+
+
+## Prerequisites
+
+- NPM & NodeJS.
+  - Standard NodeJS executable is named as nodejs, which needs to be
+  linked to another file named node which is recognized by this program. It can be
+  done using the command `ln -s /path/to/nodejs /path/to/node`.
 
 ## Installation
 
 OS X & Linux:
 
 ```sh
-npm install my-crazy-module --save
+$ git clone https://github.com/coadunate/nanoView.github
+$ cd nanoView
+$ npm Install
+$ npm run build
 ```
+## Deployment
 
-Windows:
+Run the following command to serve the application on `http-server`
 
 ```sh
-edit autoexec.bat
+$ npm run http-server
 ```
+Then open http://localhost:8080 in your browser of choice.
 
 ## Usage example
 

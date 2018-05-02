@@ -1,0 +1,82 @@
+<!doctype html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="examples/demo.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="examples/d3.min.js"></script>
+<script type="text/javascript" src="examples/data_select.js"></script>
+</head>
+
+<body onload="getProjects()">
+<!-- <body> -->
+  <form class="form-horizontal" action="" onsubmit="performClick(dir, ref, sam, name)">
+  <fieldset>
+
+  <!-- Form Name -->
+  <legend>Data Selection</legend>
+  <p> Create a New Project Here: </p>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="name">Give this project a name: </label>
+    <div class="col-md-4">
+    <input id="name" name="name" type="text" placeholder="" class="form-control input-md" required="">
+
+    </div>
+  </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="dir">Provide the directory containing the FAST5 files:</label>
+    <div class="col-md-4">
+    <input id="dir" name="dir" type="text" placeholder="" class="form-control input-md" required="">
+
+    </div>
+  </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="ref">Provide the reference sequence FASTA file:</label>
+    <div class="col-md-4">
+    <input id="ref" name="ref" type="text" placeholder="" class="form-control input-md" required="">
+
+    </div>
+  </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="sam">Provide the corresponding SAM file:</label>
+    <input id="sam" name="sam" type="text" placeholder="" class="form-control input-md" required="">
+
+    </div>
+  </div>
+
+  </fieldset>
+  </form>
+  <input type="submit" href="#" onclick="performClick('dir', 'ref', 'sam', 'name');" value="Submit">
+
+  <form class="form-horizontal">
+<fieldset>
+
+<!-- Form Name -->
+<legend></legend>
+
+<p> Select Existing Project Here: </p>
+
+<!-- Select Basic -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="existing">Select Existing Project: </label>
+  <div class="col-md-4">
+    <select id="existing" name="existing" class="form-control">
+    </select>
+    </div>
+  </div>
+</div>
+
+</fieldset>
+</form>
+
+<button onclick="test()", type="submit" value="TEST" />
+</body>

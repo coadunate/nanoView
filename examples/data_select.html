@@ -1,0 +1,79 @@
+<!doctype html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="demo.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="d3.min.js"></script>
+<script type="text/javascript" src="data_select.js"></script>
+</head>
+
+<body>
+  <form class="form-horizontal" action="" onsubmit="performClick(dir, ref, sam, name)">
+  <fieldset>
+
+  <!-- Form Name -->
+  <legend>Data Selection</legend>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="name">Give this project a name: </label>
+    <div class="col-md-4">
+    <input id="name" name="name" type="text" placeholder="" class="form-control input-md" required="">
+
+    </div>
+  </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="dir">Provide the directory containing the FAST5 files:</label>
+    <div class="col-md-4">
+    <input id="dir" name="dir" type="text" placeholder="" class="form-control input-md" required="">
+
+    </div>
+  </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="ref">Provide the reference sequence FASTA file:</label>
+    <div class="col-md-4">
+    <input id="ref" name="ref" type="text" placeholder="" class="form-control input-md" required="">
+
+    </div>
+  </div>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="sam">Provide the corresponding SAM file:</label>
+    <div class="col-md-4">
+    <input id="sam" name="sam" type="text" placeholder="" class="form-control input-md" required="">
+
+    </div>
+  </div>
+
+  </fieldset>
+  </form>
+  <input type="submit" href="#" onclick="performClick('dir', 'ref', 'sam', 'name');" value="Submit">
+
+  <form class="form-horizontal">
+<fieldset>
+
+<!-- Form Name -->
+<legend></legend>
+
+<!-- Select Basic -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="selectbasic">Select Basic</label>
+  <div class="col-md-4">
+    <select id="selectbasic" name="selectbasic" class="form-control">
+      <option value="1">Option one</option>
+      <option value="2">Option two</option>
+    </select>
+  </div>
+</div>
+
+</fieldset>
+</form>
+
+</body>
