@@ -15,7 +15,7 @@ function performClick(dir, ref, sam, name) {
    var paths = "name=" + projectName + "&directory=" + dirPath + "&ref=" + refPath + "&sam=" + samPath;
 
 
-   xhttp.open("GET", "http://127.0.0.1:5000/generatejson/"+paths, true);
+   xhttp.open("GET", "http://206.167.183.18:5000/generatejson/"+paths, true);
    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
    // xhttp.send(paths);
    xhttp.onload = function () {
@@ -36,7 +36,7 @@ function performClick(dir, ref, sam, name) {
 
 function getProjects() {
   var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "http://127.0.0.1:5000/getprojects/", true);
+  xhttp.open("GET", "http://206.167.183.18:5000/getprojects/", true);
   xhttp.setRequestHeader("Content-Type", "application/json");
   xhttp.onload = function() {
     var projects = JSON.parse(xhttp.responseText);
