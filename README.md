@@ -41,6 +41,10 @@ Then open http://localhost:8080 in your browser of choice.
 A few motivating and useful examples of how your product can be used. Spice this up with code blocks and potentially more screenshots.
 
 
+## API
+
+Write about the function of API in this program and how it can be used.
+
 <!-- Markdown link & img dfn's -->
 [npm-image]: https://img.shields.io/npm/v/datadog-metrics.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/datadog-metrics
