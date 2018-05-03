@@ -30,7 +30,8 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
                       events_all: any,
                       yScale: (num: number) => number,
                       hideNonBaseCalled: boolean,
-                      lWidth: number) {
+                      lWidth: number,
+                      arcRadius: number) {
 
   var start = range.start(),
       stop = range.stop();
@@ -82,7 +83,7 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
       // plot the first point.
       ctx.fillStyle="red";
       ctx.beginPath();
-      ctx.arc(scale(1+start + 0.5), yScale(sub_events[start-start][0][1]), 3, 0,2*Math.PI);
+      ctx.arc(scale(1+start + 0.5), yScale(sub_events[start-start][0][1]), arcRadius, 0,2*Math.PI);
       ctx.closePath();
       ctx.fill();
 
@@ -93,7 +94,7 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
         for(var q = 1; q < sub_events[start-start].length; q++){
           ctx.fillStyle="gray";
           ctx.beginPath();
-          ctx.arc(scale(1+start + 0.5 + (sub_events[start-start][q][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][q][1]), 3, 0,2*Math.PI);
+          ctx.arc(scale(1+start + 0.5 + (sub_events[start-start][q][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][q][1]), arcRadius, 0,2*Math.PI);
           ctx.closePath();
           ctx.fill();
         }
@@ -107,7 +108,7 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
         // plot the base-called points.
         ctx.fillStyle = "red";
         ctx.beginPath();
-        ctx.arc(scale(1+pos1 + 0.5), yScale(sub_events[pos1-start][0][1]), 3, 0,2*Math.PI);
+        ctx.arc(scale(1+pos1 + 0.5), yScale(sub_events[pos1-start][0][1]), arcRadius, 0,2*Math.PI);
         ctx.closePath();
         ctx.fill();
 
@@ -116,7 +117,7 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
           for(var n1 = 1; n1 < sub_events[pos1-start].length; n1++){
             ctx.fillStyle = "gray";
             ctx.beginPath();
-            ctx.arc(scale(1+pos1 + 0.5 + (sub_events[pos1-start][n1][0] - sub_events[pos1-start][0][0]) ), yScale(sub_events[pos1-start][n1][1]), 3, 0,2*Math.PI);
+            ctx.arc(scale(1+pos1 + 0.5 + (sub_events[pos1-start][n1][0] - sub_events[pos1-start][0][0]) ), yScale(sub_events[pos1-start][n1][1]), arcRadius, 0,2*Math.PI);
             ctx.closePath();
             ctx.fill();
           }
@@ -191,12 +192,14 @@ class SignalPlotCanvas extends TiledCanvas {
     else if(this.options.SignalLineQuad) lineWidth = 4;
     else lineWidth = 1;
 
-    console.log("Quarter: " + this.options.SignalLineQuarter);
-    console.log("Half:" + this.options.SignalLineHalf);
-    console.log("Normal: " + this.options.SignalLineDouble);
-    console.log("Double: " + this.options.SignalLineQuad);
+    var arcRadius;
+    if(this.options.SignalArcHalf) arcRadius = 0.5;
+    else if(this.options.SignalArcNormal) arcRadius = 1;
+    else if(this.options.SignalArcDouble) arcRadius = 2;
+    else if(this.options.SignalArcQuad) arcRadius = 4;
+    else arcRadius = 1;
 
-    renderSignalPlot(ctx, scale, this.height, ContigInterval.fromGenomeRange(genomeRange), evnts, yScale, this.options.hideNonBaseCalled, lineWidth);
+    renderSignalPlot(ctx, scale, this.height, ContigInterval.fromGenomeRange(genomeRange), evnts, yScale, this.options.hideNonBaseCalled, lineWidth, arcRadius);
   }
 
   heightForRef(ref: string): number {
@@ -274,6 +277,23 @@ class SignalPlot extends React.Component {
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
+
+    } else if(oldOpts.SignalArcHalf != this.props.options.SignalArcHalf){
+      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+      this.tiles.invalidateAll();
+      this.updateVisualization();
+    } else if(oldOpts.SignalArcNormal != this.props.options.SignalArcNormal){
+      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+      this.tiles.invalidateAll();
+      this.updateVisualization();
+    } else if(oldOpts.SignalArcDouble != this.props.options.SignalArcDouble){
+      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+      this.tiles.invalidateAll();
+      this.updateVisualization();
+    } else if(oldOpts.SignalArcQuad != this.props.options.SignalArcQuad){
+      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+      this.tiles.invalidateAll();
+      this.updateVisualization();
     }
   }
 
@@ -302,7 +322,12 @@ SignalPlot.defaultOptions = {
   SignalLineHalf: false,
   SignalLineNormal: true,
   SignalLineDouble: false,
-  SignalLineQuad: false
+  SignalLineQuad: false,
+
+  SignalArcHalf: false,
+  SignalArcNormal: true,
+  SignalArcDouble: false,
+  SignalArcQuad: false
 };
 
 SignalPlot.getOptionsMenu = function(options: Object): any {
@@ -313,7 +338,12 @@ SignalPlot.getOptionsMenu = function(options: Object): any {
     {key: 'sline-half', label: 'Signal Line Half (1/2px)', checked: options.SignalLineHalf},
     {key: 'sline-normal', label: 'Signal Line Normal (1px)', checked: options.SignalLineNormal},
     {key: 'sline-double', label: 'Signal Line Double (2px)', checked: options.SignalLineDouble},
-    {key: 'sline-quad', label: 'Signal Line Quad (4px)', checked: options.SignalLineQuad}
+    {key: 'sline-quad', label: 'Signal Line Quad (4px)', checked: options.SignalLineQuad},
+    '-',
+    {key: 'sarc-half', label: 'Signal Arc Half (1/2)', checked: options.SignalArcHalf},
+    {key: 'sarc-normal', label: 'Signal Arc Normal (1)', checked: options.SignalArcNormal},
+    {key: 'sarc-double', label: 'Signal Arc Double (2)', checked: options.SignalArcDouble},
+    {key: 'sarc-quad', label: 'Signal Arc Quad (4)', checked: options.SignalArcQuad}
   ];
 };
 
@@ -366,6 +396,39 @@ SignalPlot.handleSelectOption = function(key: string, oldOptions: Object): Objec
       opts.SignalLineHalf = false;
       opts.SignalLineNormal = false;
       opts.SignalLineDouble = false;
+    }
+    return opts;
+
+  } else if(key == 'sarc-half'){
+    opts.SignalArcHalf = !opts.SignalArcHalf;
+    if(opts.SignalArcHalf){
+      opts.SignalArcNormal = false;
+      opts.SignalArcDouble = false;
+      opts.SignalArcQuad = false;
+    }
+    return opts;
+  } else if(key == 'sarc-normal'){
+    opts.SignalArcNormal = !opts.SignalArcNormal;
+    if(opts.SignalArcNormal){
+      opts.SignalArcHalf = false;
+      opts.SignalArcDouble = false;
+      opts.SiganlArcQuad = false;
+    }
+    return opts;
+  } else if(key == 'sarc-double'){
+    opts.SignalArcDouble = !opts.SignalArcDouble;
+    if(opts.SignalArcDouble){
+      opts.SignalArcHalf = false;
+      opts.SignalArcNormal = false;
+      opts.SignalArcQuad = false;
+    }
+    return opts;
+  } else if(key == 'sarc-quad'){
+    opts.SignalArcQuad = !opts.SignalArcQuad;
+    if(opts.SignalAarcQuad){
+      opts.SignalArcHalf = false;
+      opts.SignalArcNormal = false;
+      opts.SignalArcDouble = false;
     }
     return opts;
   }
