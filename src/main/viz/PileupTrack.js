@@ -29,18 +29,6 @@ import canvasUtils from './canvas-utils';
 import dataCanvas from 'data-canvas';
 import style from '../style';
 
-var READ_COLORS = [
-  "#F5A9A9",
-  "#F3E2A9",
-  "#BEF781",
-  "#81F79F",
-  "#81F7D8",
-  "#58ACFA",
-  "#8258FA",
-  "#9A2EFE",
-  "#FE2EF7"
-];
-
 
 var READ_HEIGHT = 13;
 var READ_SPACING = 12;  // vertical pixels between reads
@@ -189,11 +177,11 @@ function renderPileup(ctx: DataCanvasRenderingContext2D,
         ctx.fillStyle = 'red';
       } else {
         // ctx.fillStyle = style.ALIGNMENT_COLOR;
-        ctx.fillStyle = READ_COLORS[idx];
+        ctx.fillStyle = style.READ_COLORS[idx];
       }
     } else {
       // ctx.fillStyle = style.ALIGNMENT_COLOR;
-      ctx.fillStyle = READ_COLORS[idx];
+      ctx.fillStyle = style.READ_COLORS[idx];
     }
     var y = yForRow(vGroup.row);
     ctx.pushObject(vGroup);

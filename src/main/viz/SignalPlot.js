@@ -19,18 +19,7 @@ import dataCanvas from 'data-canvas';
 import d3utils from './d3utils';
 import TiledCanvas from './TiledCanvas';
 import _ from 'underscore';
-
-var READ_COLORS = [
-  "#F5A9A9",
-  "#F3E2A9",
-  "#BEF781",
-  "#81F79F",
-  "#81F7D8",
-  "#58ACFA",
-  "#8258FA",
-  "#9A2EFE",
-  "#FE2EF7"
-];
+import style from '../style';
 
 
 
@@ -78,7 +67,7 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
         for(var p = 1; p < sub_events[pos-start].length; p++){
           ctx.lineTo(scale(1+pos + 0.5 +  (sub_events[pos-start][p][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
         }
-        ctx.strokeStyle=READ_COLORS[read_num-1];
+        ctx.strokeStyle=style.READ_COLORS[read_num-1];
         ctx.lineWidth=lWidth;
         ctx.stroke();
 
@@ -194,7 +183,19 @@ class SignalPlotCanvas extends TiledCanvas {
 
     var maxSignal = 200;
     var yScale = this.yScaleForRef(maxSignal,0,0);
-    var lineWidth = this.options.ThickSignalLine ? 2 : 1;
+    var lineWidth;
+    if(this.options.SignalLineQuarter) lineWidth = 0.25;
+    else if(this.options.SignalLineHalf) lineWidth = 0.5;
+    else if(this.options.SignalLineNormal) lineWidth = 1;
+    else if(this.options.SignalLineDouble) lineWidth = 2;
+    else if(this.options.SignalLineQuad) lineWidth = 4;
+    else lineWidth = 1;
+
+    console.log("Quarter: " + this.options.SignalLineQuarter);
+    console.log("Half:" + this.options.SignalLineHalf);
+    console.log("Normal: " + this.options.SignalLineDouble);
+    console.log("Double: " + this.options.SignalLineQuad);
+
     renderSignalPlot(ctx, scale, this.height, ContigInterval.fromGenomeRange(genomeRange), evnts, yScale, this.options.hideNonBaseCalled, lineWidth);
   }
 
@@ -253,7 +254,23 @@ class SignalPlot extends React.Component {
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
-    } else if(oldOpts.ThinSignalLine != this.props.options.ThinSignalLine){
+    } else if(oldOpts.SignalLineQuarter != this.props.options.SignalLineQuarter){
+      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+      this.tiles.invalidateAll();
+      this.updateVisualization();
+    } else if(oldOpts.SignalLineHalf != this.props.options.SignalLineHalf){
+      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+      this.tiles.invalidateAll();
+      this.updateVisualization();
+    } else if(oldOpts.SignalLineNormal != this.props.options.SignalLineNormal){
+      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+      this.tiles.invalidateAll();
+      this.updateVisualization();
+    }else if(oldOpts.SignalLineDouble != this.props.options.SignalLineDouble){
+      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+      this.tiles.invalidateAll();
+      this.updateVisualization();
+    } else if(oldOpts.SignalLineQuad != this.props.options.SignalLineQuad){
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
@@ -281,16 +298,22 @@ SignalPlot.displayName = 'signalplot';
 SignalPlot.defaultOptions = {
 
   hideNonBaseCalled: false,
-  ThinSignalLine: true,
-  ThickSignalLine: false
+  SignalLineQuarter: false,
+  SignalLineHalf: false,
+  SignalLineNormal: true,
+  SignalLineDouble: false,
+  SignalLineQuad: false
 };
 
 SignalPlot.getOptionsMenu = function(options: Object): any {
   return [
     {key: 'hide-non-basecalled', label: 'Hide Non Basecalled Events', checked: options.hideNonBaseCalled},
     '-',
-    {key: 'signal-thin', label: 'Thin Signal Line', checked: options.ThinSignalLine},
-    {key: 'signal-thick', label: 'Thick Signal Line', checked: options.ThickSignalLine}
+    {key: 'sline-quarter', label: 'Signal Line Quarter (1/4px)', checked: options.SignalLineQuarter},
+    {key: 'sline-half', label: 'Signal Line Half (1/2px)', checked: options.SignalLineHalf},
+    {key: 'sline-normal', label: 'Signal Line Normal (1px)', checked: options.SignalLineNormal},
+    {key: 'sline-double', label: 'Signal Line Double (2px)', checked: options.SignalLineDouble},
+    {key: 'sline-quad', label: 'Signal Line Quad (4px)', checked: options.SignalLineQuad}
   ];
 };
 
@@ -300,13 +323,50 @@ SignalPlot.handleSelectOption = function(key: string, oldOptions: Object): Objec
   if (key == 'hide-non-basecalled') {
     opts.hideNonBaseCalled = !opts.hideNonBaseCalled;
     return opts;
-  } else if(key == 'signal-thin'){
-    opts.ThinSignalLine = !opts.ThinSignalLine;
-    if (opts.ThinSignalLine) opts.ThickSignalLine = false;
+  } else if(key == 'sline-quarter'){
+    opts.SignalLineQuarter = !opts.SignalLineQuarter;
+    if (opts.SignalLineQuarter) {
+      opts.SignalLineHalf = false;
+      opts.SignalLineNormal = false;
+      opts.SignalLineDouble = false;
+      opts.SignalLineQuad = false;
+    }
     return opts;
-  } else if(key == 'signal-thick'){
-    opts.ThickSignalLine = !opts.ThickSignalLine;
-    if(opts.ThickSignalLine) opts.ThinSignalLine = false;
+  } else if(key == 'sline-half'){
+    opts.SignalLineHalf = !opts.SignalLineHalf;
+    if(opts.SignalLineHalf) {
+      opts.SignalLineQuarter = false;
+      opts.SignalLineNormal = false;
+      opts.SignalLineDouble = false;
+      opts.SignalLineQuad = false;
+    }
+    return opts;
+  } else if(key == 'sline-normal'){
+    opts.SignalLineNormal = !opts.SignalLineNormal;
+    if(opts.SignalLineNormal){
+      opts.SignalLineQuarter = false;
+      opts.SignalLineHalf = false;
+      opts.SignalLineDouble = false;
+      opts.SignalLineQuad = false;
+    }
+    return opts;
+  } else if(key == 'sline-double'){
+    opts.SignalLineDouble = !opts.SignalLineDouble;
+    if(opts.SignalLineDouble){
+      opts.SignalLineQuarter = false;
+      opts.SignalLineHalf = false;
+      opts.SignalLineNormal = false;
+      opts.SignalLineQuad = false;
+    }
+    return opts;
+  } else if(key == 'sline-quad'){
+    opts.SignalLineQuad = !opts.SignalLineQuad;
+    if(opts.SignalLineQuad){
+      opts.SignalLineQuarter = false;
+      opts.SignalLineHalf = false;
+      opts.SignalLineNormal = false;
+      opts.SignalLineDouble = false;
+    }
     return opts;
   }
   return oldOptions;  // no change

@@ -18,8 +18,20 @@ module.exports = {
     'N': 'black'
   },
 
+  READ_COLORS: [
+    "#F5A9A9",
+    "#F3E2A9",
+    "#BEF781",
+    "#81F79F",
+    "#81F7D8",
+    "#58ACFA",
+    "#8258FA",
+    "#9A2EFE",
+    "#FE2EF7"
+  ],
+
   // Styles for base pairs which are rendered as letters
-  LOOSE_TEXT_STYLE: `15px 'Helvetica Neue', Helvetica, Arial, sans-serif`,
+  LOOSE_TEXT_STYLE: `12px 'Helvetica Neue', Helvetica, Arial, sans-serif`,
   TIGHT_TEXT_STYLE: `bold 12px 'Helvetica Neue', Helvetica, Arial, sans-serif`,
 
   // Gene track
