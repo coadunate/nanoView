@@ -180,7 +180,7 @@ class SignalPlotCanvas extends TiledCanvas {
       start: Math.max(0, range.start() - 1),
       stop: range.stop() + 1
     };
-    var evnts = this.getEventData(genomeRange);
+    //var evnts = this.getEventData(genomeRange);
 
     var maxSignal = 200;
     var yScale = this.yScaleForRef(maxSignal,0,0);
