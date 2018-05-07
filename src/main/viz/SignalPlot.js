@@ -204,6 +204,10 @@ class SignalPlotCanvas extends TiledCanvas {
     }
   }
 
+  heightForRef(ref: string): number {
+    return this.height;
+  }
+
   updateHeight(height: number) {
     this.height = height;
   }
@@ -323,8 +327,8 @@ SignalPlot.defaultOptions = {
   SignalLineQuad: false,
 
   SignalArcHalf: false,
-  SignalArcNormal: true,
-  SignalArcDouble: false,
+  SignalArcNormal: false,
+  SignalArcDouble: true,
   SignalArcQuad: false
 };
 
