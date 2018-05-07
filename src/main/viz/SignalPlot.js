@@ -323,8 +323,8 @@ SignalPlot.defaultOptions = {
   SignalLineQuad: false,
 
   SignalArcHalf: false,
-  SignalArcNormal: false,
-  SignalArcDouble: true,
+  SignalArcNormal: true,
+  SignalArcDouble: false,
   SignalArcQuad: false
 };
 
