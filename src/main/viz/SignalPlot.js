@@ -180,7 +180,7 @@ class SignalPlotCanvas extends TiledCanvas {
       start: Math.max(0, range.start() - 1),
       stop: range.stop() + 1
     };
-    //var evnts = this.getEventData(genomeRange);
+    var evnts = this.getEventData(genomeRange);
 
     var maxSignal = 200;
     var yScale = this.yScaleForRef(maxSignal,0,0);
@@ -199,9 +199,9 @@ class SignalPlotCanvas extends TiledCanvas {
     else if(this.options.SignalArcQuad) arcRadius = 4;
     else arcRadius = 1;
 
-    // if(evnts.length > 0) {
-    //   renderSignalPlot(ctx, scale, this.height, ContigInterval.fromGenomeRange(genomeRange), evnts, yScale, this.options.hideNonBaseCalled, lineWidth, arcRadius);
-    // }
+    if(evnts.length > 0) {
+      renderSignalPlot(ctx, scale, this.height, ContigInterval.fromGenomeRange(genomeRange), evnts, yScale, this.options.hideNonBaseCalled, lineWidth, arcRadius);
+    }
   }
 
   heightForRef(ref: string): number {
