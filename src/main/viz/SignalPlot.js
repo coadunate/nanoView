@@ -52,21 +52,21 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
       // PLOT SIGNAL PATH
 
       ctx.beginPath();
-      ctx.moveTo(scale(1+start + 0.5), yScale(sub_events[start-start][0][1]));
+      ctx.moveTo(scale(start + 0.5), yScale(sub_events[start-start][0][1]));
       // Plot the non-basecalled path.
       for(var n = 1; n < sub_events[start-start].length; n++){
-        ctx.lineTo(scale(1+start + 0.5 + (sub_events[start-start][n][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][n][1]));
+        ctx.lineTo(scale(start + 0.5 + (sub_events[start-start][n][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][n][1]));
       }
       // Plot the base-called path.
       for(var pos = start+1; pos <= stop; pos++){
         ctx.save();
         ctx.pushObject({pos});
 
-        ctx.lineTo(scale(1+pos+0.5), yScale(sub_events[pos-start][0][1]));
+        ctx.lineTo(scale(pos+0.5), yScale(sub_events[pos-start][0][1]));
 
         // Plot the non-basecalled path.
         for(var p = 1; p < sub_events[pos-start].length; p++){
-          ctx.lineTo(scale(1+pos + 0.5 +  (sub_events[pos-start][p][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
+          ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][p][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
         }
         ctx.strokeStyle=style.READ_COLORS[read_num-1];
         ctx.lineWidth=lWidth;
@@ -83,7 +83,7 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
       // plot the first point.
       ctx.fillStyle="red";
       ctx.beginPath();
-      ctx.arc(scale(1+start + 0.5), yScale(sub_events[start-start][0][1]), arcRadius, 0,2*Math.PI);
+      ctx.arc(scale(start + 0.5), yScale(sub_events[start-start][0][1]), arcRadius, 0,2*Math.PI);
       ctx.closePath();
       ctx.fill();
 
@@ -94,7 +94,7 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
         for(var q = 1; q < sub_events[start-start].length; q++){
           ctx.fillStyle="gray";
           ctx.beginPath();
-          ctx.arc(scale(1+start + 0.5 + (sub_events[start-start][q][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][q][1]), arcRadius, 0,2*Math.PI);
+          ctx.arc(scale(start + 0.5 + (sub_events[start-start][q][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][q][1]), arcRadius, 0,2*Math.PI);
           ctx.closePath();
           ctx.fill();
         }
@@ -108,7 +108,7 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
         // plot the base-called points.
         ctx.fillStyle = "red";
         ctx.beginPath();
-        ctx.arc(scale(1+pos1 + 0.5), yScale(sub_events[pos1-start][0][1]), arcRadius, 0,2*Math.PI);
+        ctx.arc(scale(pos1 + 0.5), yScale(sub_events[pos1-start][0][1]), arcRadius, 0,2*Math.PI);
         ctx.closePath();
         ctx.fill();
 
@@ -117,7 +117,7 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
           for(var n1 = 1; n1 < sub_events[pos1-start].length; n1++){
             ctx.fillStyle = "gray";
             ctx.beginPath();
-            ctx.arc(scale(1+pos1 + 0.5 + (sub_events[pos1-start][n1][0] - sub_events[pos1-start][0][0]) ), yScale(sub_events[pos1-start][n1][1]), arcRadius, 0,2*Math.PI);
+            ctx.arc(scale(pos1 + 0.5 + (sub_events[pos1-start][n1][0] - sub_events[pos1-start][0][0]) ), yScale(sub_events[pos1-start][n1][1]), arcRadius, 0,2*Math.PI);
             ctx.closePath();
             ctx.fill();
           }
@@ -199,7 +199,9 @@ class SignalPlotCanvas extends TiledCanvas {
     else if(this.options.SignalArcQuad) arcRadius = 4;
     else arcRadius = 1;
 
-    renderSignalPlot(ctx, scale, this.height, ContigInterval.fromGenomeRange(genomeRange), evnts, yScale, this.options.hideNonBaseCalled, lineWidth, arcRadius);
+    if(evnts.length > 0) {
+      renderSignalPlot(ctx, scale, this.height, ContigInterval.fromGenomeRange(genomeRange), evnts, yScale, this.options.hideNonBaseCalled, lineWidth, arcRadius);
+    }
   }
 
   heightForRef(ref: string): number {
