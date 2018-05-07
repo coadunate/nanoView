@@ -24,7 +24,7 @@ OS X & Linux:
 ```sh
 $ git clone https://github.com/coadunate/nanoView.github
 $ cd nanoView
-$ npm Install
+$ npm install
 $ npm run build
 ```
 ## Deployment
