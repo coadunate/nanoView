@@ -2,8 +2,8 @@
 
 // We are going to use the same data source for multiple tracks
 var bamSource = pileup.formats.bam({
-  url: '/test-data/conference.bam',
-  indexUrl: '/test-data/conference.bam.bai'
+  url: '/test-data/sub1_sorted.bam',
+  indexUrl: '/test-data/sub1_sorted.bam.bai'
 });
 
 var sources = [
@@ -38,7 +38,7 @@ var sources = [
     viz: pileup.viz.coverage(),
     data: bamSource,
     cssClass: 'normal',
-    name: 'Coverage'
+    name: 'Yes'
   }
 ];
-var range = {contig: 'burn-in', start: 1, stop: 50};
+var range = {contig: 'burn-in', start: 1, stop: 30};
