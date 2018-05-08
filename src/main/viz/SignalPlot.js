@@ -142,7 +142,7 @@ class SignalPlotCanvas extends TiledCanvas {
     var result = [];
     var xhttp = new XMLHttpRequest();
 
-    xhttp.open("GET", "http://127.0.0.1:5000/getrange/start=" + range.start + "&end=" + (range.stop+1) + "&name=semifinaldataset", false);
+    xhttp.open("GET", "http://206.167.183.18:5000/getrange/start=" + range.start + "&end=" + (range.stop+1) + "&name=may07-dataset", false);
     xhttp.onload = function() {
       result = JSON.parse(xhttp.responseText);
 

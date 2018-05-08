@@ -463,6 +463,7 @@ class PileupTrack extends React.Component {
   }
 
   handleClick(reactEvent: any) {
+    console.log("-->CLICKCED!!");
     var ev = reactEvent.nativeEvent,
         x = ev.offsetX,
         y = ev.offsetY;
@@ -478,13 +479,13 @@ class PileupTrack extends React.Component {
 
     renderPileup(trackingCtx, scale, range, null, false, vGroups);
     var vRead = _.find(trackingCtx.hits[0], hit => hit.read);
-    //var alert = window.alert || console.log;
+    var alert = window.alert || console.log;
     //alert("REMOVED");
     this.state.clicked = vRead.read.name;
     // MODIFIED: Remove the alert
-    // if (vRead) {
-    //   alert(vRead.read.debugString());
-    // }
+    if (vRead) {
+      alert(vRead.read.debugString());
+    }
   }
 }
 

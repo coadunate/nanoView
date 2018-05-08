@@ -2,8 +2,8 @@
 
 // We are going to use the same data source for multiple tracks
 var bamSource = pileup.formats.bam({
-  url: '/test-data/conference_sorted.bam',
-  indexUrl: '/test-data/conference_sorted.bam.bai'
+  url: '/test-data/may07.bam',
+  indexUrl: '/test-data/may07.bam.bai'
 });
 
 var sources = [

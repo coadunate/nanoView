@@ -91,7 +91,7 @@ class Root extends React.Component {
   makeDivForTrack(key: string, track: VisualizedTrack): React.Element {
     //this should be improved, but I have no idea how (when trying to
     //access this.trackReactElements wih string key, flow complains)
-    var intKey = parseInt(key); 
+    var intKey = parseInt(key);
     var trackEl = (
         <VisualizationWrapper visualization={track.visualization}
             range={this.state.range}
