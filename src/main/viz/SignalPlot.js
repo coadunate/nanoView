@@ -312,13 +312,13 @@ class SignalPlot extends React.Component {
 
   drawYScale(){
     var canvas = ReactDOM.findDOMNode(this),
-        {width, height, range} = this.props;
+        {height} = this.props;
     var ctx = dataCanvas.getDataContext(canvasUtils.getContext(canvas));
     // ctx.reset();
     // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ctx.lineWidth = 2;
-    ctx.fillStyle = "red"
+    ctx.fillStyle = "red";
     ctx.textAlign = "center";
 
     // top line
