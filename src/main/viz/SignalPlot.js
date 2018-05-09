@@ -328,7 +328,7 @@ class SignalPlot extends React.Component {
     //ctx.rotate(0);
 
     // bottom line
-    canvasUtils.drawLine(ctx, 0.5, (height/2)+15, 0.5, height)
+    canvasUtils.drawLine(ctx, 0.5, (height/2)+15, 0.5, height);
   }
 
   updateVisualization() {
