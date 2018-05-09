@@ -156,10 +156,10 @@ class SignalPlotCanvas extends TiledCanvas {
     this.options = newOptions;
   }
 
-  yScaleForRef(maxSignal: number, bottomPadding: number, topPadding:number): (y: number) => number {
+  yScaleForRef(maxSignal: number, topPadding: number, bottomPadding: number): (y: number) => number {
     return scale.linear()
       .domain([maxSignal, 0])
-      .range([bottomPadding, this.height - topPadding - 100])
+      .range([topPadding, this.height - bottomPadding])
       .nice();
   }
 
@@ -182,8 +182,8 @@ class SignalPlotCanvas extends TiledCanvas {
     };
     var evnts = this.getEventData(genomeRange);
 
-    var maxSignal = 200;
-    var yScale = this.yScaleForRef(maxSignal,0,0);
+    var maxSignal = 140;
+    var yScale = this.yScaleForRef(maxSignal,10,50);
     var lineWidth;
     if(this.options.SignalLineQuarter) lineWidth = 0.25;
     else if(this.options.SignalLineHalf) lineWidth = 0.5;
@@ -228,6 +228,7 @@ class SignalPlot extends React.Component {
   componentDidMount() {
     this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
     this.updateVisualization();
+    this.drawYScale();
   }
 
   getScale(): Scale {
@@ -249,6 +250,7 @@ class SignalPlot extends React.Component {
         this.tiles.invalidateAll();
       }
       this.updateVisualization();
+      this.drawYScale();
     }
   }
 
@@ -259,44 +261,74 @@ class SignalPlot extends React.Component {
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
+      this.drawYScale();
     } else if(oldOpts.SignalLineQuarter != this.props.options.SignalLineQuarter){
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
+      this.drawYScale();
     } else if(oldOpts.SignalLineHalf != this.props.options.SignalLineHalf){
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
+      this.drawYScale();
     } else if(oldOpts.SignalLineNormal != this.props.options.SignalLineNormal){
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
+      this.drawYScale();
     }else if(oldOpts.SignalLineDouble != this.props.options.SignalLineDouble){
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
+      this.drawYScale();
     } else if(oldOpts.SignalLineQuad != this.props.options.SignalLineQuad){
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
-
+      this.drawYScale();
     } else if(oldOpts.SignalArcHalf != this.props.options.SignalArcHalf){
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
+      this.drawYScale();
     } else if(oldOpts.SignalArcNormal != this.props.options.SignalArcNormal){
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
+      this.drawYScale();
     } else if(oldOpts.SignalArcDouble != this.props.options.SignalArcDouble){
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
+      this.drawYScale();
     } else if(oldOpts.SignalArcQuad != this.props.options.SignalArcQuad){
       this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
       this.tiles.invalidateAll();
       this.updateVisualization();
+      this.drawYScale();
     }
+  }
+
+  drawYScale(){
+    var canvas = ReactDOM.findDOMNode(this),
+        {width, height, range} = this.props;
+    var ctx = dataCanvas.getDataContext(canvasUtils.getContext(canvas));
+    // ctx.reset();
+    // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    ctx.lineWidth = 2;
+    ctx.fillStyle = "red"
+    ctx.textAlign = "center";
+
+    // top line
+    canvasUtils.drawLine(ctx, 0.5, 0.5, 0.5, (height/2) - 0.5);
+    //ctx.rotate(-Math.PI/2);
+    ctx.fillText("50 pA", 0, 0 );
+    //ctx.rotate(0);
+
+    // bottom line
+    canvasUtils.drawLine(ctx, 0.5, (height/2)+15, 0.5, height)
   }
 
   updateVisualization() {
@@ -319,7 +351,7 @@ SignalPlot.displayName = 'signalplot';
 SignalPlot.displayName = 'signalplot';
 SignalPlot.defaultOptions = {
 
-  hideNonBaseCalled: false,
+  hideNonBaseCalled: true,
   SignalLineQuarter: false,
   SignalLineHalf: false,
   SignalLineNormal: true,
