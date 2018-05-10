@@ -49,35 +49,67 @@ function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
         }
       }
 
-      // PLOT SIGNAL PATH
-
       ctx.beginPath();
-      ctx.moveTo(scale(start + 0.5), yScale(sub_events[start-start][0][1]));
-      // Plot the non-basecalled path.
-      for(var n = 1; n < sub_events[start-start].length; n++){
-        ctx.lineTo(scale(start + 0.5 + (sub_events[start-start][n][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][n][1]));
-      }
-      // Plot the base-called path.
-      for(var pos = start+1; pos <= stop; pos++){
+      ctx.moveTo(scale(start+0.5), yScale(sub_events[start-start][0][1]));
+      ctx.lineTo(scale(start+1+0.5), yScale(sub_events[start-start][0][1]));
+
+      for(var pos=start+1; pos <=stop; pos++){
         ctx.save();
         ctx.pushObject({pos});
 
         ctx.lineTo(scale(pos+0.5), yScale(sub_events[pos-start][0][1]));
 
-        // Plot the non-basecalled path.
-        for(var p = 1; p < sub_events[pos-start].length; p++){
-          ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][p][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
-        }
-        ctx.strokeStyle=style.READ_COLORS[read_num-1];
+        // if(sub_events[pos-start].length > 1)
+        //   ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][1][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][0][1]));
+        //
+        // // Plot the non-basecalled path.
+        // for(var p = 1; p < sub_events[pos-start].length-1; p++){
+        //   ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][p][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
+        //   ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][p+1][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
+        // }
+        // ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][sub_events[pos-start].length-1][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][sub_events[pos-start].length-1][1]));
+
+        ctx.lineTo(scale(pos+1+0.5), yScale(sub_events[pos-start][0][1]));
+
         ctx.lineWidth=lWidth;
+        ctx.strokeStyle=style.READ_COLORS[read_num-1];
+
         ctx.stroke();
 
         ctx.popObject();
         ctx.restore();
 
       }
-      ctx.closePath();
-
+      ctx.lineTo(scale(stop+0.5), yScale(sub_events[stop-start][0][1]));
+      // // PLOT SIGNAL PATH
+      //
+      // ctx.beginPath();
+      // ctx.moveTo(scale(start + 0.5), yScale(sub_events[start-start][0][1]));
+      // // Plot the non-basecalled path.
+      // for(var n = 1; n < sub_events[start-start].length; n++){
+      //   ctx.lineTo(scale(start + 0.5 + (sub_events[start-start][n][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][n][1]));
+      // }
+      // // Plot the base-called path.
+      // for(var pos = start+1; pos <= stop; pos++){
+      //   ctx.save();
+      //   ctx.pushObject({pos});
+      //
+      //   ctx.lineTo(scale(pos+0.5), yScale(sub_events[pos-start][0][1]));
+      //
+      //   // Plot the non-basecalled path.
+      //   for(var p = 1; p < sub_events[pos-start].length; p++){
+      //     ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][p][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
+      //   }
+      //   ctx.strokeStyle=style.READ_COLORS[read_num-1];
+      //   ctx.lineWidth=lWidth;
+      //   ctx.stroke();
+      //
+      //   ctx.popObject();
+      //   ctx.restore();
+      //
+      // }
+      // ctx.closePath();
+      //
       // PLOT SIGNAL EVENT POINTS.
 
       // plot the first point.
@@ -184,6 +216,8 @@ class SignalPlotCanvas extends TiledCanvas {
 
     var maxSignal = 140;
     var yScale = this.yScaleForRef(maxSignal,10,50);
+    console.log("Testing out yScale");
+    console.log(yScale);
     var lineWidth;
     if(this.options.SignalLineQuarter) lineWidth = 0.25;
     else if(this.options.SignalLineHalf) lineWidth = 0.5;
@@ -323,9 +357,10 @@ class SignalPlot extends React.Component {
 
     // top line
     canvasUtils.drawLine(ctx, 0.5, 0.5, 0.5, (height/2) - 0.5);
-    //ctx.rotate(-Math.PI/2);
-    ctx.fillText("50 pA", 0, 0 );
-    //ctx.rotate(0);
+    var middleSignal = String(height/2);
+    ctx.rotate(90 * Math.PI / 180);
+    ctx.fillText(middleSignal + " pA", 100, 50-40);
+    ctx.rotate(-90 * Math.PI / 180);
 
     // bottom line
     canvasUtils.drawLine(ctx, 0.5, (height/2)+15, 0.5, height);
