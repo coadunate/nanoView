@@ -49,8 +49,8 @@ def generatejson(name, directory, ref, sam):
 						record[i][id][0] = float(record[i-1]) + float(diff)*float(id)
 			record.append(max_min)
 			# print(record[0])
-			# print(a)
-			# print(c)
+			print(a)
+			print(b)
 			with open(path, 'wb') as outfile:
 				pickle.dump(record, outfile)
 				pickle.dump(max_min, outfile)

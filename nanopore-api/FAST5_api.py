@@ -446,4 +446,4 @@ class Fast5Event(object):
             max_min.append(str(min_sig))
             record.append(sub1)
             # record.append(max_min)
-            return record, max_min, cigar_offset_d, cigar_offset_i
+            return record, max_min, cigar_offsets_d, cigar_offsets_i
