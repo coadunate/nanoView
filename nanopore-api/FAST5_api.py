@@ -392,7 +392,14 @@ class Fast5Event(object):
         record = []
         qname = self.get_qname()
         pos = get_pos(file_path, qname)
+        cigar_offsets_d = []
+        cigar_offsets_i = []
         cigar = get_cigar(file_path, qname)
+        for i in range(len(cigar)):
+            if cigar[i] == 'd':
+                cigar_offsets_d.append(i)
+            if cigar[i] == 'i':
+                cigar_offsets_i.append(i)
         record.append(qname)
         # record = "[\"" + str(self.get_qname()) + "\": "
 
@@ -439,4 +446,4 @@ class Fast5Event(object):
             max_min.append(str(min_sig))
             record.append(sub1)
             # record.append(max_min)
-            return record, max_min
+            return record, max_min, cigar_offset_d, cigar_offset_i

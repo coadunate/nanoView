@@ -38,22 +38,23 @@ def generatejson(name, directory, ref, sam):
 			path = "./data/"+name+"/"+base+".record"
 			# sys.stdout = open(path, 'w')
 			f = Fast5Event(directory+"/"+i)
-			record, a, b = f.get_json_event_data(file_path=sam)
-			# for i in range(len(record)):
-			# 	if i % 2 == 1 or i == 0:
-			# 		continue
-			# 	else:
-			# 		leng = len(record[i])
-			# 		diff = 1.0/float(leng)
-			# 		for id in range(leng):
-			# 			record[i][id][0] = float(record[i-1]) + float(diff)*float(id)
-			# record.append(max_min)
-			# with open(path, 'wb') as outfile:
-			# 	pickle.dump(record, outfile)
-				# pickle.dump(max_min, outfile)
-	# return "Project Successfully Created", 201
-	print(a)
-	print(b)
+			record, max_min,a,b = f.get_list_event_data(file_path=sam)
+			for i in range(len(record)):
+				if i % 2 == 1 or i == 0:
+					continue
+				else:
+					leng = len(record[i])
+					diff = 1.0/float(leng)
+					for id in range(leng):
+						record[i][id][0] = float(record[i-1]) + float(diff)*float(id)
+			record.append(max_min)
+			# print(record[0])
+			# print(a)
+			# print(c)
+			with open(path, 'wb') as outfile:
+				pickle.dump(record, outfile)
+				pickle.dump(max_min, outfile)
+	return "Project Successfully Created", 201
 	return json.dumps(record), 201
 
 

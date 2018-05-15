@@ -58,22 +58,22 @@ def do_plot_squiggle(args, fast5, begin, end):
         mean_signals.append(event.mean)
 
     counter = 0
-    start_times_f = []
-    mean_signals_f = []
-    for t in start_times:
-        if t < begin:
-            counter += 1
-            continue
-        elif t >= begin and t < end:
-            start_times_f.append(start_times[counter])
-            mean_signals_f.append(mean_signals[counter])
-            counter+=1
-        else:
-            break
+    # start_times_f = []
+    # mean_signals_f = []
+    # for t in start_times:
+    #     if t < begin:
+    #         counter += 1
+    #         continue
+    #     elif t >= begin and t < end:
+    #         start_times_f.append(start_times[counter])
+    #         mean_signals_f.append(mean_signals[counter])
+    #         counter+=1
+    #     else:
+    #         break
 
 
     if start_times:
-        plot_squiggle(args, fast5.filename, start_times_f, mean_signals_f)
+        plot_squiggle(args, fast5.filename, start_times, mean_signals)
     else:
         logger.warning("Could not extract template events for read: %s.\n" \
                         % fast5.filename)
