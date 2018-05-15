@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        canvas {
+            border: 1px solid rgba(0,0,0,0.5);
+        }
+        #results, #container {
+            display: inline-block;
+            margin: 15px;
+        }
+        p {
+            margin: 15px;
+        }
+        td {
+            border: 1px solid #bbb;
+            text-align: right;
+        }
+        .header {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<p id="user-agent"></p>
+<div id="container"></div>
+<table id="results">
+    <tr class="header">
+        <td>Circles</td>
+        <td>FPS</td>
+        <td>repaint [ms]</td>
+    </tr>
+</table>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/3.0.7/pixi.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinycolor/1.1.2/tinycolor.min.js"></script>
+<script src="https://gitcdn.xyz/repo/cool-Blue/d3-lib/master/filters/shadow.js"></script>
+<div id="log1"></div>
+<div id="log2"></div>
+<script>
+    $(function (){
+        /* global requestAnimationFrame, $, PIXI, canvg */
+        window.requestAnimationFrame = (function() {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+                    return window.setTimeout(callback, 1000/60);
+                };
+        })();
+
+        var tests = [250, 500, 750, 1000, 2000, 6000, 10000, 20000, 40000, 60000];
+        var refTest = tests[0];
+
+        var maxRadius = 30,
+            c20 = d3.scale.category20(),
+            maxX = 680,
+            maxY = 400,
+            renderer,
+            dropShadow;
+
+        function addRecord(count) {
+            var results = d3.select("#results")
+                .append("tr").selectAll("td").data([d3.format(",f")(count),"",""])
+            results.enter().append("td")
+                .text(function(d){return d});
+
+            return function updateResults(time, steps) {
+                var repaint = time / steps;
+                results.datum([count, (1000 / repaint).toFixed(2), repaint.toFixed(2)])
+                    .text(function(d, i){return this.textContent || d[i]});
+            }
+        }
+
+        // set up webgl
+        renderer = new PIXI.autoDetectRenderer(maxX, maxY);
+        $("#container").append(renderer.view);
+        renderer.backgroundColor = +("0x" + tinycolor("rgba(255,255,255,0)").toHex());
+
+        dropShadow = new PIXI.filters.DropShadowFilter();
+        dropShadow.color = "0x" + tinycolor("steelblue").toHex();
+        dropShadow.angle = Math.PI/4;
+        dropShadow.blur = 4;
+        dropShadow.distance = 5;
+
+        function test() {
+            var count,
+                maxSteps = 100,
+                steps = 0,
+                stage = new PIXI.Container(),
+                startTime,
+                circle,
+                s,
+                v = 20,
+                constraints = new PIXI.Graphics(),
+                background = new PIXI.Container();
+
+            if (tests.length > 0) {
+                count = tests.shift();
+            } else {
+                return;
+            }
+
+            var x = d3.scale.linear()
+                    .range([0, maxX])
+                    .domain([maxX * 0.1, maxX * 0.9]),
+                y = d3.scale.linear()
+                    .range([0, maxY])
+                    .domain([maxY * 0.1, maxY * 0.9]),
+                species, r = Math.pow(1.1, -(count - refTest) / refTest) * (1 - 1/10) + 1/10,
+                updateResults = addRecord(count),
+                spriteSheet = makeSpriteSheet((maxRadius * r).toFixed(), d3.range(20).map(c20));
+
+            stage.filters = [dropShadow];
+
+            constraints.lineStyle(1, 0, 0.5)
+                .drawRect(x.invert(0), y.invert(0), x.invert(maxX) - x.invert(0), y.invert(maxY) - y.invert(0));
+            background.addChild(constraints);
+
+            d3.range(count).forEach(function(i){
+                var rMax = maxRadius * r;
+                circle = new PIXI.Sprite(spriteSheet(Math.round((species = Math.random())*19)));
+                circle.data = {
+                    x: x.invert(rMax + (maxX - rMax*2) * Math.random()),
+                    y: y.invert(rMax + (maxY - rMax*2) * Math.random()),
+                    r: rMax * (s = species + 0.25) ,
+                    vx: (Math.random() - 0.5) * v,
+                    vy: (Math.random() - 0.5) * v
+                };
+                circle.scale.set(s);
+                circle.anchor.set(0.5);
+                circle.interactive = true;
+                circle.index = i;
+                circle
+                    .on("mouseover", onMouseOver)
+                    .on("mouseout", onMouseOut)
+                    // events for drag start
+                    .on('mousedown', onDragStart)
+                    .on('touchstart', onDragStart)
+                    // events for drag end
+                    .on('mouseup', onDragEnd)
+                    .on('mouseupoutside', onDragEnd)
+                    .on('touchend', onDragEnd)
+                    .on('touchendoutside', onDragEnd)
+                    // events for drag move
+                    .on('mousemove', onDragMove)
+                    .on('touchmove', onDragMove);
+                stage.addChild(circle);
+            });
+
+            // Start animation.
+            startTime = new Date().getTime();
+            requestAnimationFrame(step);
+            function step() {
+                var time;
+                stage.children.forEach(function(c){
+                    if(!c.fixed){
+                        if (x(c.data.x) >= (maxX - c.data.r) || x(c.data.x) <= c.data.r) c.data.vx *= -1;
+                        if (y(c.data.y) >= (maxY - c.data.r) || y(c.data.y) <= c.data.r) c.data.vy *= -1;
+                        c.data.x += c.data.vx;
+                        c.data.y += c.data.vy;
+                        c.position.x = c.data.x;
+                        c.position.y = c.data.y;
+                    } else {
+                        c.data.x = c.position.x;
+                        c.data.y = c.position.y;
+                    }
+                });
+                renderer.render(stage);
+                renderer.clearBeforeRender = false;
+                renderer.render(background);
+                renderer.clearBeforeRender = true;
+
+                if (steps < maxSteps) {
+                    steps++;
+                    requestAnimationFrame(step);
+                } else {
+                    time = new Date().getTime() - startTime;
+                    updateResults(time, maxSteps);
+                    test();
+                }
+            }
+            function onMouseOver(event) {
+                this.fixed |= 4;
+                console.log([myName(arguments), this.index].join(": "))
+                this.data.x = this.position.x -= this.data.vx;
+                this.data.y = this.position.y -= this.data.vy;
+                bringToFront.call(stage.children, this);
+            }
+            function bringToFront(c){
+                this.splice(c.index, 1);
+                this.push(c);
+                this.forEach(function(d, i) {d.index = i});
+            }
+            function onMouseOut(event) {
+                console.log(["\t", myName(arguments), this.index].join(": "))
+                this.fixed &= ~4;
+            }
+            function onDragStart(event) {
+                console.log([myName(arguments), this.index].join(": "))
+                // store a reference to the data
+                // the reason for this is because of multitouch
+                // we want to track the movement of this particular touch
+                this.eventData = event.data;
+                this.alpha = 0.5;
+                this.fixed  |= 2;
+            }
+
+            function onDragEnd() {
+                console.log(["\t", myName(arguments), this.index].join(": "))
+                this.alpha = 1;
+                this.fixed &= ~6;
+                // set the interaction data to null
+                this.eventData = null;
+            }
+
+            function onDragMove() {
+                if (this.fixed & 2) {
+                    console.log([myName(arguments), this.index].join(": "))
+                    var newPosition = this.eventData.getLocalPosition(this.parent);
+                    this.position.x = newPosition.x;
+                    this.position.y = newPosition.y;
+                }
+            }
+        }
+        $(function () {
+            $("#user-agent").text(navigator.userAgent);
+            test();
+        });
+
+        function makeSpriteSheet(radius, colors){
+            var padding = 2, cell = 2 * radius + padding,
+                canvas = d3.select(document.createElement("canvas"))
+                    .attr({width: cell * colors.length, height: cell})
+                    .node(),
+                context = canvas.getContext('2d'),
+
+            sheet = new PIXI.BaseTexture.fromCanvas(
+                colors.reduce(
+                    function(ctx, c, i) {
+                        return (filters.cSphere(ctx, cell * i + cell / 2, cell
+                            / 2, radius, c), ctx);
+                    },
+                    context).canvas
+            );
+
+            return function(index) {
+                return new PIXI.Texture(sheet,
+                    new PIXI.Rectangle(index * cell, 0, cell, canvas.height)
+                )
+            };
+        }
+        function myName(args) {
+            return /function\s+(\w*)\(/.exec(args.callee)[1];
+        }
+
+    })
+</script>
+</body>
+</html>

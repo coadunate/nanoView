@@ -47,7 +47,8 @@
 
   <!-- Text input-->
   <div class="form-group">
-    <label class="col-md-4 control-label" for="sam">Provide the corresponding SAM file:</label>
+    <label class="col-md-4 control-label" for="sam">Provide the corresponding BAM file:</label>
+    <div class="col-md-4">
     <input id="sam" name="sam" type="text" placeholder="" class="form-control input-md" required="">
 
     </div>
@@ -55,28 +56,27 @@
 
   </fieldset>
   </form>
-  <input type="submit" href="#" onclick="performClick('dir', 'ref', 'sam', 'name');" value="Submit">
+  <input type="submit" href="#" onclick="performClick('dir', 'ref', 'sam', 'name');" value="Submit" class="btn btn-default">
 
   <form class="form-horizontal">
-<fieldset>
+    <fieldset>
 
-<!-- Form Name -->
-<legend></legend>
+      <!-- Form Name -->
+      <legend></legend>
 
-<p> Select Existing Project Here: </p>
+      <p> Select Existing Project Here: </p>
 
-<!-- Select Basic -->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="existing">Select Existing Project: </label>
-  <div class="col-md-4">
-    <select id="existing" name="existing" class="form-control">
-    </select>
-    </div>
-  </div>
-</div>
-
-</fieldset>
-</form>
-
-<button onclick="test()", type="submit" value="TEST" />
+      <!-- Select Basic -->
+      <div class="form-group">
+        <label class="col-md-4 control-label" for="existing">Select Existing Project: </label>
+        <div class="col-md-4">
+          <select id="existing" name="existing" class="form-control">
+          </select>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+  <input type="submit" href="#" onclick="chooseExisting('existing')" value="Submit" class="btn btn-default">
+  <input type="submit" href="#" onclick="removeProject('existing'); window.location.reload();" value="Delete" class="btn btn-danger">
 </body>

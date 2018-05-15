@@ -7,6 +7,7 @@ from ont_fast5_api.fast5_info import Fast5Info # for Fast5Info
 import re # regular expressions
 import json # to parse event data
 from SAMParse import *
+import pandas as pd
 
 
 class Fast5Event(object):
@@ -83,231 +84,6 @@ class Fast5Event(object):
         self.assert_events() # Throw an erorr if the event data isn't populated.
 
         return len(self.events);
-
-    # def get_json_event_data(self,event_start = -1, event_end = -1):
-    #
-    #     signal_index = self.get_mean_signal_index()
-    #     time_index = self.get_start_time_index()
-    #     model_index = self.get_model_state_index()
-    #     length_index = self.get_length_index()
-    #     stdv_index = self.get_stdv_index()
-    #     move = self.get_move_index()
-    #     record = ""
-    #
-    #     if event_start is -1 and event_end is -1:
-    #         prev_move = -1
-    #         # get all the events of a given fast5 file
-    #         #print("index,signal,time,model,length,stdv")
-    #         for i in range(0,self.get_event_count()):
-    #             if(i == (self.get_event_count()-1)):
-    #                 record = record + (
-    #                     ",\n\t\t{\n" +
-    #                     "\t\t\t\"index\": \"" + str(i+1) + "\",\n" +
-    #                     "\t\t\t\"signal\": \"" + str(self.events[i][signal_index]) + "\",\n" +
-    #                     "\t\t\t\"time\": \"" + str(self.events[i][time_index]) + "\",\n" +
-    #                     "\t\t\t\"model\": \"" + "".join( [ chr(item) for item in self.events[event_start][model_index] ]) + "\"" + ",\n" +
-    #                     "\t\t\t\"length\": \"" + str(self.events[i][length_index]) + "\",\n" +
-    #                     "\t\t\t\"stdv\": \"" + str(self.events[i][stdv_index]) + "\"\n" +
-    #                     "\t\t}\n\t]\n}"
-    #                 )
-    #             else:
-    #                 if prev_move == -1:
-    #                     if self.events[i][move] == 1:
-    #                         prev_move = 0
-    #                     record = record + (
-    #                         "{\n\t\"" + str(prev_move) + "\":\n\t[\n\t\t{\n"
-    #                         "\t\t\t\"index\": \"" + str(i+1) + "\",\n" +
-    #                         "\t\t\t\"signal\": \"" + str(self.events[i][signal_index]) + "\",\n" +
-    #                         "\t\t\t\"time\": \"" + str(self.events[i][time_index]) + "\",\n" +
-    #                         "\t\t\t\"model\": \"" + "".join( [ chr(item) for item in self.events[event_start][model_index] ]) + "\"" + ",\n" +
-    #                         "\t\t\t\"length\": \"" + str(self.events[i][length_index]) + "\",\n" +
-    #                         "\t\t\t\"stdv\": \"" + str(self.events[i][stdv_index]) + "\"\n" +
-    #                         "\t\t}"
-    #                     )
-    #                 elif prev_move != -1 and self.events[i][move] == 0:
-    #                     record = record + (
-    #                         ",\n\t\t{\n" +
-    #                         "\t\t\t\"index\": \"" + str(i+1) + "\",\n" +
-    #                         "\t\t\t\"signal\": \"" + str(self.events[i][signal_index]) + "\",\n" +
-    #                         "\t\t\t\"time\": \"" + str(self.events[i][time_index]) + "\",\n" +
-    #                         "\t\t\t\"model\": \"" + "".join( [ chr(item) for item in self.events[event_start][model_index] ]) + "\"" + ",\n" +
-    #                         "\t\t\t\"length\": \"" + str(self.events[i][length_index]) + "\",\n" +
-    #                         "\t\t\t\"stdv\": \"" + str(self.events[i][stdv_index]) + "\"\n" +
-    #                         "\t\t}"
-    #                     )
-    #                 elif prev_move != -1 and self.events[i][move] == 1:
-    #                     prev_move += 1
-    #                     record = record + (
-    #                         "\n\t],\n\t\"" + str(prev_move) + "\":\n\t[\n\t\t{\n"
-    #                         "\t\t\t\"index\": \"" + str(i+1) + "\",\n" +
-    #                         "\t\t\t\"signal\": \"" + str(self.events[i][signal_index]) + "\",\n" +
-    #                         "\t\t\t\"time\": \"" + str(self.events[i][time_index]) + "\",\n" +
-    #                         "\t\t\t\"model\": \"" + "".join( [ chr(item) for item in self.events[event_start][model_index] ]) + "\"" + ",\n" +
-    #                         "\t\t\t\"length\": \"" + str(self.events[i][length_index]) + "\",\n" +
-    #                         "\t\t\t\"stdv\": \"" + str(self.events[i][stdv_index]) + "\"\n" +
-    #                         "\t\t}"
-    #                     )
-    #
-    #     elif event_end <= event_start:
-    #         raise IOError("The start event should be less than end and there \
-    #         should at least be one event")
-    #     else:
-    #         prev_move = -1
-    #         # get only events from start to end
-    #         # print("index,signal,time,model,length,stdv")
-    #         for i in range(event_start,event_end):
-    #
-    #             if(i == (event_end-1)):
-    #                 record = record + (
-    #                     "\t{\n" +
-    #                     "\t\t\"index\": \"" + str(i+1) + "\",\n" +
-    #                     "\t\t\"signal\": \"" + str(self.events[i][signal_index]) + "\",\n" +
-    #                     "\t\t\"time\": \"" + str(self.events[i][time_index]) + "\",\n" +
-    #                     "\t\t\"model\": \"" + "".join( [ chr(item) for item in self.events[event_start][model_index] ]) + "\"" + ",\n" +
-    #                     "\t\t\"length\": \"" + str(self.events[i][length_index]) + "\",\n" +
-    #                     "\t\t\"stdv\": \"" + str(self.events[i][stdv_index]) + "\"\n" +
-    #                     "\t\t}\n\t}"
-    #                 )
-    #             else:
-    #                 if prev_move == -1 and self.events[i][move] == 1:
-    #                     prev_move = 0
-    #                     record = record + (
-    #                         "},\n\t{\n\t\"" + str(prev_move) + "\":\n{\n"
-    #                         "\t\t\"index\": \"" + str(i+1) + "\",\n" +
-    #                         "\t\t\"signal\": \"" + str(self.events[i][signal_index]) + "\",\n" +
-    #                         "\t\t\"time\": \"" + str(self.events[i][time_index]) + "\",\n" +
-    #                         "\t\t\"model\": \"" + "".join( [ chr(item) for item in self.events[event_start][model_index] ]) + "\"" + ",\n" +
-    #                         "\t\t\"length\": \"" + str(self.events[i][length_index]) + "\",\n" +
-    #                         "\t\t\"stdv\": \"" + str(self.events[i][stdv_index]) + "\"\n" +
-    #                         "\t}"
-    #                     )
-    #                 elif prev_move != -1 and self.events[i][move] == 0:
-    #                     record = record + (
-    #                         ",\n\t{\n" +
-    #                         "\t\t\"index\": \"" + str(i+1) + "\",\n" +
-    #                         "\t\t\"signal\": \"" + str(self.events[i][signal_index]) + "\",\n" +
-    #                         "\t\t\"time\": \"" + str(self.events[i][time_index]) + "\",\n" +
-    #                         "\t\t\"model\": \"" + "".join( [ chr(item) for item in self.events[event_start][model_index] ]) + "\"" + ",\n" +
-    #                         "\t\t\"length\": \"" + str(self.events[i][length_index]) + "\",\n" +
-    #                         "\t\t\"stdv\": \"" + str(self.events[i][stdv_index]) + "\"\n" +
-    #                         "\t}"
-    #                     )
-    #                 elif prev_move != -1 and self.events[i][move] == 1:
-    #                     prev_move += 1
-    #                     record = record + (
-    #                         "},\n\t{\n\t\"" + str(prev_move) + "\":\n{\n"
-    #                         "\t\t\"index\": \"" + str(i+1) + "\",\n" +
-    #                         "\t\t\"signal\": \"" + str(self.events[i][signal_index]) + "\",\n" +
-    #                         "\t\t\"time\": \"" + str(self.events[i][time_index]) + "\",\n" +
-    #                         "\t\t\"model\": \"" + "".join( [ chr(item) for item in self.events[event_start][model_index] ]) + "\"" + ",\n" +
-    #                         "\t\t\"length\": \"" + str(self.events[i][length_index]) + "\",\n" +
-    #                         "\t\t\"stdv\": \"" + str(self.events[i][stdv_index]) + "\"\n" +
-    #                         "\t}"
-    #                     )
-    #                     # print(record)
-    #     # print(record)
-    #     return record
-
-    def get_json_event_data(self,event_start = -1, event_end = -1, file_path=""):
-
-        signal_index = self.get_mean_signal_index()
-        time_index = self.get_start_time_index()
-        model_index = self.get_model_state_index()
-        length_index = self.get_length_index()
-        stdv_index = self.get_stdv_index()
-        move = self.get_move_index()
-
-        max_sig = 0
-        min_sig = 100
-
-        record = []
-        qname = self.get_qname()
-        pos = get_pos(file_path, qname)
-        cigar = get_cigar(file_path, qname)
-        record.append(qname)
-        # record = "[\"" + str(self.get_qname()) + "\": "
-
-        if event_start is -1 and event_end is -1:
-            prev_move = -1
-            # get all the events of a given fast5 file
-            #print("index,signal,time,model,length,stdv")
-            for i in range(0,self.get_event_count()):
-                if self.events[i][signal_index] > max_sig:
-                    max_sig = self.events[i][signal_index]
-                if self.events[i][signal_index] < min_sig:
-                    min_sig = self.events[i][signal_index]
-                if prev_move == -1:
-                    if self.events[i][move] == 1:
-                        prev_move = 0
-                        if cigar[prev_move] !=
-                    # record.append(str("%06d" % prev_move))
-                    record.append(str(prev_move+pos))
-                    sub1 = []
-                    sub1.append([str(i+pos+1), str(self.events[i][signal_index]),
-                        str(self.events[i][time_index]),
-                        "".join( [ chr(item) for item in self.events[event_start][model_index] ]),
-                        str(self.events[i][length_index]),
-                        str(self.events[i][stdv_index])])
-                elif prev_move != -1 and self.events[i][move] == 0:
-                    sub1.append([str(i+pos+1), str(self.events[i][signal_index]),
-                        str(self.events[i][time_index]),
-                        "".join( [ chr(item) for item in self.events[event_start][model_index] ]),
-                        str(self.events[i][length_index]),
-                        str(self.events[i][stdv_index])])
-                elif prev_move != -1 and self.events[i][move] == 1:
-                    prev_move += 1
-                    record.append(sub1)
-                    # record.append(str("%06d" % prev_move))
-                    record.append(str(prev_move+pos))
-                    sub1 = []
-                    sub1.append([str(i+pos+1), str(self.events[i][signal_index]),
-                        str(self.events[i][time_index]),
-                        "".join( [ chr(item) for item in self.events[event_start][model_index] ]),
-                        str(self.events[i][length_index]),
-                        str(self.events[i][stdv_index])])
-            max_min = []
-            max_min.append(str(max_sig))
-            max_min.append(str(min_sig))
-            record.append(sub1)
-            # record.append(max_min)
-            return record, max_min
-
-    def get_csv_event_data(self,event_start = -1, event_end = -1):
-
-        signal_index = self.get_mean_signal_index()
-        time_index = self.get_start_time_index()
-        model_index = self.get_model_state_index()
-        length_index = self.get_length_index()
-        stdv_index = self.get_stdv_index()
-
-        if event_start is -1 and event_end is -1:
-            # get all the events of a given fast5 file
-            print("index,signal,time,model,length,stdv")
-            for i in range(0,self.get_event_count()):
-                print(
-                    i+1, # serial number
-                    self.events[i][signal_index], # signal
-                    self.events[i][time_index], # time
-                    "".join( [ chr(item) for item in self.events[event_start][model_index] ]), # model
-                    self.events[i][length_index], # length
-                    self.events[i][stdv_index], # stdv
-                    sep=",")
-
-        elif event_end <= event_start:
-            raise IOError("The start event should be less than end and there \
-            should at least be one event")
-        else:
-            # get only events from start to end
-            print("index,signal,time,model,length,stdv")
-            for i in range(event_start,event_end):
-                print(
-                    i+1, # serial number
-                    self.events[i][signal_index], # signal
-                    self.events[i][time_index], # time
-                    "".join( [ chr(item) for item in self.events[event_start][model_index] ]), # model
-                    self.events[i][length_index], # length
-                    self.events[i][stdv_index], # stdv
-                    sep=",")
 
 
     def get_event_time_data(self,event_start,event_end):
@@ -535,7 +311,73 @@ class Fast5Event(object):
         return dset.value.decode("utf-8").split('\n')[0][1:]
 
 
-    def get_list_event_data(self,event_start = -1, event_end = -1, file_path = ""):
+    def get_json_event_data(self,event_start = -1, event_end = -1, file_path = ""):
+        signal_index = self.get_mean_signal_index()
+        time_index = self.get_start_time_index()
+        model_index = self.get_model_state_index()
+        length_index = self.get_length_index()
+        stdv_index = self.get_stdv_index()
+        move = self.get_move_index()
+
+        max_sig = 0
+        min_sig = 100
+
+        record = {}
+        qname = self.get_qname()
+        pos = get_pos(file_path, qname)
+
+        cigar_offsets_d = []
+        cigar_offsets_i = []
+        cigar = get_cigar(file_path, qname)
+        for i in range(len(cigar)):
+            if cigar[i] == 'd':
+                cigar_offsets_d.append(i)
+            if cigar[i] == 'i':
+                cigar_offsets_i.append(i)
+
+        record['qname'] = qname
+        record['events'] = {}
+
+        if event_start is -1 and event_end is -1:
+            prev_move = -1
+
+            for i in range(0,self.get_event_count()):
+                if self.events[i][signal_index] > max_sig:
+                    max_sig = self.events[i][signal_index]
+                if self.events[i][signal_index] < min_sig:
+                    min_sig = self.events[i][signal_index]
+                if prev_move == -1:
+                    if self.events[i][move] == 1:
+                        prev_move = 0
+
+                    record['events'][str(prev_move+pos)] = {}
+                    record['events'][str(prev_move+pos)][str(i+pos+1)] = {'signal' : str(self.events[i][signal_index]),
+                                                                    'time' : str(self.events[i][time_index]),
+                                                                    'model' : "".join( [ chr(item) for item in self.events[event_start][model_index] ]),
+                                                                    'length' : str(self.events[i][length_index]),
+                                                                    'stdv' : str(self.events[i][stdv_index])}
+                elif prev_move != -1 and self.events[i][move] == 0:
+                    record['events'][str(prev_move+pos)][str(i+pos+1)] = {'signal' : str(self.events[i][signal_index]),
+                                                                    'time' : str(self.events[i][time_index]),
+                                                                    'model' : "".join( [ chr(item) for item in self.events[event_start][model_index] ]),
+                                                                    'length' : str(self.events[i][length_index]),
+                                                                    'stdv' : str(self.events[i][stdv_index])}
+                elif prev_move != -1 and self.events[i][move] == 1:
+                    prev_move += 1
+
+                    record['events'][str(prev_move+pos)] = {}
+                    record['events'][str(prev_move+pos)][str(i+pos+1)] = {'signal' : str(self.events[i][signal_index]),
+                                                                    'time' : str(self.events[i][time_index]),
+                                                                    'model' : "".join( [ chr(item) for item in self.events[event_start][model_index] ]),
+                                                                    'length' : str(self.events[i][length_index]),
+                                                                    'stdv' : str(self.events[i][stdv_index])}
+            record['max_sig'] = str(max_sig)
+            record['min_sig'] = str(min_sig)
+
+            return record, cigar_offsets_d, cigar_offsets_i
+
+
+    def get_list_event_data(self,event_start = -1, event_end = -1, file_path=""):
 
         signal_index = self.get_mean_signal_index()
         time_index = self.get_start_time_index()
@@ -566,7 +408,7 @@ class Fast5Event(object):
                 if prev_move == -1:
                     if self.events[i][move] == 1:
                         prev_move = 0
-                        if cigar[prev_move] !=
+                        # if cigar[prev_move] !=
                     # record.append(str("%06d" % prev_move))
                     record.append(str(prev_move+pos))
                     sub1 = []

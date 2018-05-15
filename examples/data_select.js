@@ -14,8 +14,7 @@ function performClick(dir, ref, sam, name) {
    //     { "bam_path" : samPath }, {"project_name" : projectName} ];
    var paths = "name=" + projectName + "&directory=" + dirPath + "&ref=" + refPath + "&sam=" + samPath;
 
-
-   xhttp.open("GET", "http://206.167.183.18:5000/generatejson/"+paths, true);
+   xhttp.open("GET", "http://0.0.0.0:5000/generatejson/"+paths, true);
    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
    // xhttp.send(paths);
    xhttp.onload = function () {
@@ -36,7 +35,7 @@ function performClick(dir, ref, sam, name) {
 
 function getProjects() {
   var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "http://206.167.183.18:5000/getprojects/", true);
+  xhttp.open("GET", "http://0.0.0.0:5000/getprojects/", true);
   xhttp.setRequestHeader("Content-Type", "application/json");
   xhttp.onload = function() {
     var projects = JSON.parse(xhttp.responseText);
@@ -67,21 +66,38 @@ function test() {
   // event.preventDefault();
 }
 
-// $(document).ready(function() {
-//   var xhttp = new XMLHttpRequest();
-//   xhttp.open("GET", "http://127.0.0.1:5000/getprojects/", true);
-//   xhttp.onload = function() {
-//     var projects = JSON.parse(xhttp.responseText);
-//     // console.log(projects);
-//     // var wrapper = $('#wrapper'), container;
-//     for (var key in projects){
-//       var div = document.createElement("option");
-//       div.innerHTML = projects[key];
-//       div.value = projects[key];
-//       document.getElementById("existing").appendChild(div);
-//     }
-//   }
-//   xhttp.send();
-//
-//   // event.preventDefault();
-// });
+
+function chooseExisting(existing) {
+   var xhttp = new XMLHttpRequest();
+   var name = document.getElementById(existing);
+   var projectName = name.value;
+
+   var paths = "existing=" + projectName;
+
+   console.log(projectName)
+
+   // xhttp.open("POST", "http://0.0.0.0:5000/removeproject/"+paths, true);
+   // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+   //
+   // xhttp.onload = function () {
+   //   console.log(xhttp.responseText);
+   // };
+   // xhttp.send();
+}
+
+
+function removeProject(existing) {
+   var xhttp = new XMLHttpRequest();
+   var name = document.getElementById(existing);
+   var projectName = name.value;
+
+   var paths = "existing=" + projectName;
+
+   xhttp.open("POST", "http://0.0.0.0:5000/removeproject/"+paths, true);
+   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+   xhttp.onload = function () {
+     console.log(xhttp.responseText);
+   };
+   xhttp.send();
+}

@@ -1,22 +1,25 @@
 from flask import Flask, render_template, request
-from fast5_event_api import Fast5Event
-import json, jsonify
+from FAST5_api import Fast5Event
 from flask_cors import CORS, cross_origin
-import os, errno, sys
+import os, errno, sys, h5py, pickle, simplejson, json, jsonify
 from os import listdir
 from os.path import isfile, join
-import simplejson
-import h5py
 import pandas as pd
-import pickle
 from operator import itemgetter
+from SAMParse import *
+# import pysam
 
 app = Flask(__name__)
 cors = CORS(app)
-# app.config['CORS_HEADERS'] = 'Content-Type'
 
 
-@app.route('/generatejson/<string:name>&<path:directory>&<string:ref>&<string:sam>', methods = ['GET'])
+@app.route('/test/<path:sam>', methods = ['GET'])
+def test(sam):
+
+	return str(len(cigar)), 201
+
+
+@app.route('/generatejson/<string:name>&<path:directory>&<path:ref>&<path:sam>', methods = ['GET'])
 # @cross_origin()
 def generatejson(name, directory, ref, sam):
 	name = name[5:]
@@ -35,38 +38,33 @@ def generatejson(name, directory, ref, sam):
 			path = "./data/"+name+"/"+base+".record"
 			# sys.stdout = open(path, 'w')
 			f = Fast5Event(directory+"/"+i)
-			record, max_min = f.get_list_event_data()
-			for i in range(len(record)):
-				if i % 2 == 1 or i == 0:
-					continue
-				else:
-					leng = len(record[i])
-					diff = 1.0/float(leng)
-					for id in range(leng):
-						record[i][id][0] = float(record[i-1]) + float(diff)*float(id)
-			record.append(max_min)
-			with open(path, 'wb') as outfile:
-				pickle.dump(record, outfile)
+			record, a, b = f.get_json_event_data(file_path=sam)
+			# for i in range(len(record)):
+			# 	if i % 2 == 1 or i == 0:
+			# 		continue
+			# 	else:
+			# 		leng = len(record[i])
+			# 		diff = 1.0/float(leng)
+			# 		for id in range(leng):
+			# 			record[i][id][0] = float(record[i-1]) + float(diff)*float(id)
+			# record.append(max_min)
+			# with open(path, 'wb') as outfile:
+			# 	pickle.dump(record, outfile)
 				# pickle.dump(max_min, outfile)
-	return "Project Successfully Created", 201
+	# return "Project Successfully Created", 201
+	print(a)
+	print(b)
+	return json.dumps(record), 201
 
 
-@app.route('/test/<string:name>', methods = ['GET'])
-# @cross_origin()
-def test(name):
-	name = name[5:]
-	# dir_path = "./data/"+name
-	# for i in listdir(dir_path):
-	i = './data/tt/SKSASKA671342P_20170221_FNFAF11800_MN20421_sequencing_run_Lambda_1_12000_ch98_read1408_strand.json'
-	with open(i, 'rb') as outfile:
-		record = pickle.load(outfile)
-	print(record)
-	return 'record', 201
-
-@app.route('/test1/', methods = ['GET'])
-# @cross_origin()
-def test1():
-	return 'record', 201
+@app.route('/removeproject/<string:existing>', methods = ['POST'])
+def removeproject(existing):
+	name = existing[9:]
+	try:
+		os.system('rm -rf data/'+name)
+		return 'Project Successfully Removed', 201
+	except ValueError:
+		return 'Error Removing Project:' + name, 406
 
 
 @app.route('/getrange/<string:start>&<string:end>&<string:name>', methods = ['GET'])
@@ -100,26 +98,16 @@ def getrange(start, end, name):
 
 
 @app.route('/getprojects/', methods = ['GET'])
-# @cross_origin()
 def dataselect():
 	sub = os.listdir('./data')
-	# projects = {'name' : sub}
 	projects = {}
 	for i in range(len(sub)):
 		projects[i] = sub[i]
 	return json.dumps(projects), 200
 
 
-@app.route('/mm/', methods = ['GET'])
-# @cross_origin()
-def mm():
-	return json.dumps(mami), 200
-
-
 @app.after_request
-# @cross_origin()
 def after_request(response):
-	# header = response.headers
 	# header['Access-Control-Allow-Origin'] = '*'
 	response.headers.add('Access-Control-Allow-Origin', '*')
 	response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
