@@ -19,7 +19,7 @@ import dataCanvas from 'data-canvas';
 import d3utils from './d3utils';
 import TiledCanvas from './TiledCanvas';
 import _ from 'underscore';
-import style from '../style';
+//import style from '../style';
 
 
 
