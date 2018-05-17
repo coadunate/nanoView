@@ -23,154 +23,154 @@ import style from '../style';
 
 
 
-function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
-                      scale: (num: number) => number,
-                      height: number,
-                      range: ContigInterval<string>,
-                      events_all: any,
-                      yScale: (num: number) => number,
-                      hideNonBaseCalled: boolean,
-                      lWidth: number,
-                      arcRadius: number) {
-
-  var start = range.start(),
-      stop = range.stop();
-
-  var read_num = 0; // count the read number for READ_COLOR array.
-  // Loop through everything in the events_all array except the last, which is the min and max
-  // signal values.
-  for(var i = 0;  i < events_all.length-1; i++){
-    if(i%2!=0){ // The odd entries represent the array of events.
-      read_num++;
-      var sub_events = [];
-      for(var j = 0; j < events_all[i].length; j++){ // each event is array of sub events
-        if(j%2!=0){ // the odd ones are event records and even are the event number.
-          sub_events.push(events_all[i][j]);
-        }
-      }
-      console.log("SUB_EVENTS");
-      console.log(sub_events);
-
-      ctx.beginPath();
-      ctx.moveTo(scale(start+0.5), yScale(sub_events[start-start][0][1]));
-      ctx.lineTo(scale(start+1+0.5), yScale(sub_events[start-start][0][1]));
-
-      for(var pos=start+1; pos <=stop; pos++){
-        ctx.save();
-        ctx.pushObject({pos});
-
-        ctx.lineTo(scale(pos+0.5), yScale(sub_events[pos-start][0][1]));
-        ctx.lineTo(scale(pos+1+0.5), yScale(sub_events[pos-start][0][1]));
-
-        // for (var nb = 1; np < sub_events[pos-start].length-1;){
-        //   var x = scale(pos + 0.5)
-        // }
-
-        //if(sub_events[pos-start].length > 1)
-        //  ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][1][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][0][1]));
-        //
-        // // Plot the non-basecalled path.
-        // for(var p = 1; p < sub_events[pos-start].length-1; p++){
-        //   ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][p][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
-        //   ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][p+1][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
-        // }
-        // ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][sub_events[pos-start].length-1][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][sub_events[pos-start].length-1][1]));
-
-        //ctx.lineTo(scale(pos+1+0.5), yScale(sub_events[pos-start][0][1]));
-
-        ctx.lineWidth=lWidth;
-        ctx.strokeStyle=style.READ_COLORS[read_num-1];
-
-        ctx.stroke();
-
-        ctx.popObject();
-        ctx.restore();
-
-      }
-      ctx.lineTo(scale(stop+0.5), yScale(sub_events[stop-start][0][1]));
-      // // PLOT SIGNAL PATH
-      //
-      // ctx.beginPath();
-      // ctx.moveTo(scale(start + 0.5), yScale(sub_events[start-start][0][1]));
-      // // Plot the non-basecalled path.
-      // for(var n = 1; n < sub_events[start-start].length; n++){
-      //   ctx.lineTo(scale(start + 0.5 + (sub_events[start-start][n][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][n][1]));
-      // }
-      // // Plot the base-called path.
-      // for(var pos = start+1; pos <= stop; pos++){
-      //   ctx.save();
-      //   ctx.pushObject({pos});
-      //
-      //   ctx.lineTo(scale(pos+0.5), yScale(sub_events[pos-start][0][1]));
-      //
-      //   // Plot the non-basecalled path.
-      //   for(var p = 1; p < sub_events[pos-start].length; p++){
-      //     ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][p][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
-      //   }
-      //   ctx.strokeStyle=style.READ_COLORS[read_num-1];
-      //   ctx.lineWidth=lWidth;
-      //   ctx.stroke();
-      //
-      //   ctx.popObject();
-      //   ctx.restore();
-      //
-      // }
-      // ctx.closePath();
-      //
-      // PLOT SIGNAL EVENT POINTS.
-
-      // plot the first point.
-      ctx.fillStyle="red";
-      ctx.beginPath();
-      ctx.arc(scale(start + 0.5), yScale(sub_events[start-start][0][1]), arcRadius, 0,2*Math.PI);
-      ctx.closePath();
-      ctx.fill();
-
-
-      if(!hideNonBaseCalled){
-
-        // plot the starting non-basecalled points if you're supposed to.
-        for(var q = 1; q < sub_events[start-start].length; q++){
-          ctx.fillStyle="gray";
-          ctx.beginPath();
-          ctx.arc(scale(start + 0.5 + (sub_events[start-start][q][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][q][1]), arcRadius, 0,2*Math.PI);
-          ctx.closePath();
-          ctx.fill();
-        }
-      }
-
-      for(var pos1 = start+1; pos1 <= stop; pos1++){
-
-        ctx.save();
-        ctx.pushObject({pos1});
-
-        // plot the base-called points.
-        ctx.fillStyle = "red";
-        ctx.beginPath();
-        ctx.arc(scale(pos1 + 0.5), yScale(sub_events[pos1-start][0][1]), arcRadius, 0,2*Math.PI);
-        ctx.closePath();
-        ctx.fill();
-
-        if(!hideNonBaseCalled){
-          // plot the ret of non-basecalled points if you're suppos1ed to
-          for(var n1 = 1; n1 < sub_events[pos1-start].length; n1++){
-            ctx.fillStyle = "gray";
-            ctx.beginPath();
-            ctx.arc(scale(pos1 + 0.5 + (sub_events[pos1-start][n1][0] - sub_events[pos1-start][0][0]) ), yScale(sub_events[pos1-start][n1][1]), arcRadius, 0,2*Math.PI);
-            ctx.closePath();
-            ctx.fill();
-          }
-        }
-
-        ctx.popObject();
-        ctx.restore();
-      }
-
-    }
-
-  }
-
-}
+// function renderSignalPlot(ctx: DataCanvasRenderingContext2D,
+//                       scale: (num: number) => number,
+//                       height: number,
+//                       range: ContigInterval<string>,
+//                       events_all: any,
+//                       yScale: (num: number) => number,
+//                       hideNonBaseCalled: boolean,
+//                       lWidth: number,
+//                       arcRadius: number) {
+//
+//   var start = range.start(),
+//       stop = range.stop();
+//
+//   var read_num = 0; // count the read number for READ_COLOR array.
+//   // Loop through everything in the events_all array except the last, which is the min and max
+//   // signal values.
+//   for(var i = 0;  i < events_all.length-1; i++){
+//     if(i%2!=0){ // The odd entries represent the array of events.
+//       read_num++;
+//       var sub_events = [];
+//       for(var j = 0; j < events_all[i].length; j++){ // each event is array of sub events
+//         if(j%2!=0){ // the odd ones are event records and even are the event number.
+//           sub_events.push(events_all[i][j]);
+//         }
+//       }
+//       console.log("SUB_EVENTS");
+//       console.log(sub_events);
+//
+//       ctx.beginPath();
+//       ctx.moveTo(scale(start+0.5), yScale(sub_events[start-start][0][1]));
+//       ctx.lineTo(scale(start+1+0.5), yScale(sub_events[start-start][0][1]));
+//
+//       for(var pos=start+1; pos <=stop; pos++){
+//         ctx.save();
+//         ctx.pushObject({pos});
+//
+//         ctx.lineTo(scale(pos+0.5), yScale(sub_events[pos-start][0][1]));
+//         ctx.lineTo(scale(pos+1+0.5), yScale(sub_events[pos-start][0][1]));
+//
+//         // for (var nb = 1; np < sub_events[pos-start].length-1;){
+//         //   var x = scale(pos + 0.5)
+//         // }
+//
+//         //if(sub_events[pos-start].length > 1)
+//         //  ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][1][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][0][1]));
+//         //
+//         // // Plot the non-basecalled path.
+//         // for(var p = 1; p < sub_events[pos-start].length-1; p++){
+//         //   ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][p][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
+//         //   ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][p+1][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
+//         // }
+//         // ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][sub_events[pos-start].length-1][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][sub_events[pos-start].length-1][1]));
+//
+//         //ctx.lineTo(scale(pos+1+0.5), yScale(sub_events[pos-start][0][1]));
+//
+//         ctx.lineWidth=lWidth;
+//         ctx.strokeStyle=style.READ_COLORS[read_num-1];
+//
+//         ctx.stroke();
+//
+//         ctx.popObject();
+//         ctx.restore();
+//
+//       }
+//       ctx.lineTo(scale(stop+0.5), yScale(sub_events[stop-start][0][1]));
+//       // // PLOT SIGNAL PATH
+//       //
+//       // ctx.beginPath();
+//       // ctx.moveTo(scale(start + 0.5), yScale(sub_events[start-start][0][1]));
+//       // // Plot the non-basecalled path.
+//       // for(var n = 1; n < sub_events[start-start].length; n++){
+//       //   ctx.lineTo(scale(start + 0.5 + (sub_events[start-start][n][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][n][1]));
+//       // }
+//       // // Plot the base-called path.
+//       // for(var pos = start+1; pos <= stop; pos++){
+//       //   ctx.save();
+//       //   ctx.pushObject({pos});
+//       //
+//       //   ctx.lineTo(scale(pos+0.5), yScale(sub_events[pos-start][0][1]));
+//       //
+//       //   // Plot the non-basecalled path.
+//       //   for(var p = 1; p < sub_events[pos-start].length; p++){
+//       //     ctx.lineTo(scale(pos + 0.5 +  (sub_events[pos-start][p][0] - sub_events[pos-start][0][0]) ), yScale(sub_events[pos-start][p][1]));
+//       //   }
+//       //   ctx.strokeStyle=style.READ_COLORS[read_num-1];
+//       //   ctx.lineWidth=lWidth;
+//       //   ctx.stroke();
+//       //
+//       //   ctx.popObject();
+//       //   ctx.restore();
+//       //
+//       // }
+//       // ctx.closePath();
+//       //
+//       // PLOT SIGNAL EVENT POINTS.
+//
+//       // plot the first point.
+//       ctx.fillStyle="red";
+//       ctx.beginPath();
+//       ctx.arc(scale(start + 0.5), yScale(sub_events[start-start][0][1]), arcRadius, 0,2*Math.PI);
+//       ctx.closePath();
+//       ctx.fill();
+//
+//
+//       if(!hideNonBaseCalled){
+//
+//         // plot the starting non-basecalled points if you're supposed to.
+//         for(var q = 1; q < sub_events[start-start].length; q++){
+//           ctx.fillStyle="gray";
+//           ctx.beginPath();
+//           ctx.arc(scale(start + 0.5 + (sub_events[start-start][q][0] - sub_events[start-start][0][0]) ), yScale(sub_events[start-start][q][1]), arcRadius, 0,2*Math.PI);
+//           ctx.closePath();
+//           ctx.fill();
+//         }
+//       }
+//
+//       for(var pos1 = start+1; pos1 <= stop; pos1++){
+//
+//         ctx.save();
+//         ctx.pushObject({pos1});
+//
+//         // plot the base-called points.
+//         ctx.fillStyle = "red";
+//         ctx.beginPath();
+//         ctx.arc(scale(pos1 + 0.5), yScale(sub_events[pos1-start][0][1]), arcRadius, 0,2*Math.PI);
+//         ctx.closePath();
+//         ctx.fill();
+//
+//         if(!hideNonBaseCalled){
+//           // plot the ret of non-basecalled points if you're suppos1ed to
+//           for(var n1 = 1; n1 < sub_events[pos1-start].length; n1++){
+//             ctx.fillStyle = "gray";
+//             ctx.beginPath();
+//             ctx.arc(scale(pos1 + 0.5 + (sub_events[pos1-start][n1][0] - sub_events[pos1-start][0][0]) ), yScale(sub_events[pos1-start][n1][1]), arcRadius, 0,2*Math.PI);
+//             ctx.closePath();
+//             ctx.fill();
+//           }
+//         }
+//
+//         ctx.popObject();
+//         ctx.restore();
+//       }
+//
+//     }
+//
+//   }
+//
+// }
 
 
 class SignalPlotCanvas extends TiledCanvas {
