@@ -334,7 +334,8 @@
         // draw the full dataset otherwise
         else {
             context.beginPath();
-
+            data.sort(function(a,b){ return a[0].name.localeCompare(b[0].name); });
+            console.log(data);
             for(var m = 0; m < data.length; m++){
               drawingOptions.lineColor = READ_COLORS[m];
               for(var i = 0; i < data[m].length; i++){
@@ -347,7 +348,7 @@
                 }else {
                   active = point;
                 }
-                console.log(point.name);
+                //console.log(point.name);
               }
             }
         }
@@ -362,7 +363,7 @@
     }
 
     function drawPoint(point, r, prvPoint,options) {
-        if(point.name == '5471738e-4031-4ff1-86e0-175181fdfa6f'){
+        if(point.name == 'e7766dbc-3f61-4d93-9c3a-8714e51e2a6f'){
           var cx = xScale(point.x);
           var cy = yScale(point.y);
 

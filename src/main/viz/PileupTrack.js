@@ -216,6 +216,14 @@ function renderPileup(ctx: DataCanvasRenderingContext2D,
   }
 
   ctx.font = style.TIGHT_TEXT_STYLE;
+
+  // TODO: vReads ouputs different lengths and many times.
+
+  vGroups.sort(function(a,b){return a.key.localeCompare(b.key); });
+  console.log("-----");
+  console.log(vGroups);
+  console.log("-----");
+  //vGroups.sort(function(a,b){return a.key.localeCompare(b.key); });
   vGroups.forEach((vGroup,idx) => drawGroup(vGroup,idx));
 }
 
