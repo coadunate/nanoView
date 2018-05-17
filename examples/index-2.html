@@ -127,11 +127,13 @@
           }
           for(var k = 0; k < subEv.length; k++){
             for(var l = 0; l < subEv[k].length; l++){
-              var _x = [];
-              _x.push(subEv[k][l][0]); // x value
-              _x.push(subEv[k][l][0]); // cigar status
-              x.push(_x);
-              y.push(subEv[k][l][1]);
+              if(subEv[k][l][0] % 1 == 0){
+                var _x = [];
+                _x.push(subEv[k][l][0]); // x value
+                _x.push(subEv[k][l][0]); // cigar status
+                x.push(_x);
+                y.push(subEv[k][l][1]);
+              }
             }
           }
 
@@ -363,7 +365,7 @@
     }
 
     function drawPoint(point, r, prvPoint,options) {
-        if(point.name == 'e7766dbc-3f61-4d93-9c3a-8714e51e2a6f'){
+        if(true){
           var cx = xScale(point.x);
           var cy = yScale(point.y);
 
