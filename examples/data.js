@@ -2,19 +2,19 @@
 
 // We are going to use the same data source for multiple tracks
 var bamSource = pileup.formats.bam({
-  url: '/test-data/may07.bam',
-  indexUrl: '/test-data/may07.bam.bai'
+  url: '/test-data/aln.sorted.bam',
+  indexUrl: '/test-data/aln.sorted.bam.bai'
 });
 
 var sources = [
   {
-    viz: pileup.viz.location(),
-    name: 'Location'
-  },
-  {
     viz: pileup.viz.signalplot(),
     data: bamSource,
     name: "Signal Plot"
+  },
+  {
+    viz: pileup.viz.location(),
+    name: 'Location'
   },
   {
     viz: pileup.viz.pileup(),
@@ -41,4 +41,4 @@ var sources = [
     name: 'Coverage'
   }
 ];
-var range = {contig: 'burn-in', start: 1, stop: 30};
+var range = {contig: 'burn-in', start: 1, stop: 20};

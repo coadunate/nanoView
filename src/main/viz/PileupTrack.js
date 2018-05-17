@@ -483,7 +483,7 @@ class PileupTrack extends React.Component {
     //alert("REMOVED");
     this.state.clicked = vRead.read.name;
     // MODIFIED: Remove the alert
-    if (vRead) {
+    if (vRead.read.debugString()) {
       alert(vRead.read.debugString());
     }
   }
@@ -491,7 +491,7 @@ class PileupTrack extends React.Component {
 
 PileupTrack.displayName = 'pileup';
 PileupTrack.defaultOptions = {
-  viewAsPairs: false,
+  viewAsPairs: true,
   colorByInsert: true,
   colorByStrand: false,
   hideAlignments: false
