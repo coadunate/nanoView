@@ -38,10 +38,12 @@
 <body>
 
 </div>
-<div style="margin-left: 500px;">
-  <button type="button" name="button" id="LAMBDA" onClick="removeRendering();renderLambdaData('206.167.183.18','aln-sorted-17')">LAMBDA</button>
-  <button type="button" name="button" id="TOMBO">TOMBO</button>
+<div style="margin-left: 500px;display:inline-block;" id="mainButtons">
+  <!-- <button type="button" name="button" id="LAMBDA" onClick="removeRendering();renderEventData('206.167.183.18','aln-sorted-17');showButtons('lambda')">LAMBDA</button>
+  <button type="button" name="button" id="TOMBO" onClick="removeRendering();showButtons()">TOMBO</button> ||&rarr;</button>
+  <div id="additionalButtons" style="display:inline-block"></div> -->
 </div>
+<br />
 <svg id="axis-svg" class="plot" style="margin-top:40px;"></svg>
 <canvas id="plot-canvas" class="plot"></canvas>
 <div id="pileup"></div>
@@ -58,6 +60,68 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.12/d3.min.js" charset="utf-8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.0/lodash.min.js"></script>
 <script src="playground.js"></script>
+<script type="text/javascript">
+
+  addons = {
+    line: false,
+    non_basecalled: false
+  }
+
+  var mainButtonsDiv = document.getElementById("mainButtons");
+
+  var mb1 = document.createElement('BUTTON');
+  mb1.appendChild(document.createTextNode("ALBACORE"));
+  mainButtonsDiv.appendChild(mb1);
+  mb1.addEventListener('click',function(){
+    removeRendering();
+    renderEventData('206.167.183.18','aln-sorted-17',addons);
+    showButtons('lambda');
+  });
+
+  mb2 = document.createElement("BUTTON")
+  mb2.appendChild(document.createTextNode("TOMBO"));
+  mainButtonsDiv.appendChild(mb2);
+  mb2.addEventListener('click',function(){
+    removeRendering();
+    showButtons();
+  });
+
+  mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' || → ')))
+
+  var additionalButtons = document.createElement("div");
+  additionalButtons.setAttribute("style","display:inline-block");
+  mainButtonsDiv.append(additionalButtons);
+
+  function showButtons(dataset='none'){
+    while(additionalButtons.firstChild){
+      additionalButtons.removeChild(additionalButtons.firstChild);
+    }
+    if(dataset == 'lambda'){
+      div = document.getElementById("additionalButtons");
+      b1 = document.createElement('BUTTON');
+      t1 = document.createTextNode("TOGGLE LINES");
+      b1.appendChild(t1);
+      additionalButtons.appendChild(b1);
+      b1.addEventListener('click',function(){
+        removeRendering();
+        addons.line = !addons.line;
+        renderEventData('206.167.183.18','aln-sorted-17',addons)
+      });
+
+      additionalButtons.appendChild(document.createElement("span").appendChild(document.createTextNode(" -- ")));
+
+      b3 = document.createElement("BUTTON");
+      t3 = document.createTextNode("TOGGLE NON-BASECALLED");
+      b3.appendChild(t3);
+      additionalButtons.appendChild(b3);
+      b3.addEventListener('click',function(){
+        removeRendering();
+        addons.non_basecalled = !addons.non_basecalled;
+        renderEventData('206.167.183.18','aln-sorted-17',addons)
+      });
+    }
+  }
+</script>
 <script>
 
   // define all size variables
@@ -90,7 +154,7 @@
     svg.selectAll("*").remove();
   }
 
-  function renderLambdaData(url,datasetname){
+  function renderEventData(url,datasetname, addition = {lines: false}){
     var pileupRange = p.getRange() ? p.getRange() : range;
     // constants
     var subsetSize = 100;
@@ -137,7 +201,8 @@
       var result = [];
       var xhttp = new XMLHttpRequest();
 
-      xhttp.open("GET", "http://" + url + ":5000/getrange/start=" + range.start + "&end=" + (range.stop+1) + "&name=" + datasetname, false);
+      //xhttp.open("GET", "http://" + url + ":5000/getrange/start=" + range.start + "&end=" + (range.stop+1) + "&name=" + datasetname, false);
+      xhttp.open("GET", "http://" + url + ":5000/getall/name=aln-sorted-17", false);
       xhttp.onload = function() {
         result = JSON.parse(xhttp.responseText);
 
@@ -157,13 +222,11 @@
           }
           for(var k = 0; k < subEv.length; k++){
             for(var l = 0; l < subEv[k].length; l++){
-              if(subEv[k][l][0] % 1 == 0){
-                var _x = [];
-                _x.push(subEv[k][l][0]); // x value
-                _x.push(subEv[k][l][0]); // cigar status
-                x.push(_x);
-                y.push(subEv[k][l][1]);
-              }
+              var _x = [];
+              _x.push(subEv[k][l][0]); // x value
+              _x.push(subEv[k][l][0]); // cigar status
+              x.push(_x);
+              y.push(subEv[k][l][1]);
             }
           }
 
@@ -206,13 +269,18 @@
 
 
 
-    var xRange = [];
+    var xRange = [Infinity,-Infinity];
     var yRange = [];
+    console.log(data);
     data.forEach(function(d,i){
-      xRange = d3.extent(d, function(e){ return e.x });
-      yRange = d3.extent(d, function(e){ return e.y });
-    })
+      _xRange = d3.extent(d, function(e){ return e.x });
 
+      if(_xRange[0] < xRange[0]) xRange[0] = _xRange[0];
+      if(_xRange[1] > xRange[1]) xRange[1] = _xRange[1];
+
+      yRange = d3.extent(d, function(e){ return e.y });
+      //console.log(xRange);
+    })
     var xScale = d3.scale.linear()
         .domain([1,157])
         .range([0, width]);
@@ -244,7 +312,7 @@
         .y(yScale)
         .scaleExtent([1, 1000])
         .on("zoom", onZoomEnd)
-        //.on("zoomend", onZoomEnd);
+        .on("zoomend", onZoomEnd);
 
     // append x-axis, y-axis
     var xAxisSvg = svg.append('g')
@@ -295,10 +363,12 @@
     }
 
     function onZoom() {
-        clearTimeout(zoomEndTimeout);
-        draw(randomIndex,drawingOptions);
-        xAxisSvg.call(xAxis);
-        yAxisSvg.call(yAxis);
+        // clearTimeout(zoomEndTimeout);
+        // draw(randomIndex,drawingOptions);
+        // xAxisSvg.call(xAxis);
+        // yAxisSvg.call(yAxis);
+        var _range = {contig: 'burn-in', start: Math.round(xScale.domain()[0]), stop: Math.round(xScale.domain()[1]) };
+        p.setRange(_range);
     }
 
     function onZoomEnd(dOpts) {
@@ -325,7 +395,6 @@
         var active;
 
         context.clearRect(0, 0, fullWidth, fullHeight);
-        context.fillStyle = 'red';
         context.strokeWidth = 1;
         context.strokeStyle = 'blue';
         // if an index parameter is supplied, we only want to draw points
@@ -357,7 +426,6 @@
                 var prvPoint = i < data[m].length-1 ? data[m][i+1] : 0;
 
                 if(!point.selected){
-                  // ADD CONDITION FOR RENDERING HERE!!
                   drawPoint(point,options.pointRadius, prvPoint, drawingOptions);
                 }else {
                   active = point;
@@ -370,14 +438,13 @@
         // ensure that the actively selected point is drawn last
         // so it appears at the top of the draw order
         if(active) {
-            context.stroke = 'red';
             drawPoint(active, options.pointRadius,data[1],options);
             context.strokeStyle = 'steelblue';
         }
     }
 
     function drawPoint(point, r, prvPoint,options) {
-        if(true){
+        if(addition.non_basecalled || (!addition.non_basecalled && point.x%1==0)){ // NON BASECALLED
           var cx = xScale(point.x);
           var cy = yScale(point.y);
 
@@ -385,22 +452,23 @@
           var pY = yScale(prvPoint.y);
 
 
+          if(addition.line){
+            context.beginPath();
+            context.lineTo(cx,cy);
+            context.lineTo(pX,cy);
+            context.lineTo(pX,pY);
+            context.lineWidth= options.lineWidth;
+            context.strokeStyle=options.lineColor;
+            context.stroke();
+            context.closePath();
+          }
 
 
-          // context.beginPath();
-          // context.lineTo(cx,cy);
-          // context.lineTo(pX,cy);
-          // context.lineTo(pX,pY);
-          //
-          //
-          // context.lineWidth= options.lineWidth;
-          // context.strokeStyle=options.lineColor;
-          // context.stroke();
 
           if(point.x %1 != 0){
             context.fillStyle="gray";
-          } else {
-            context.fillStyle="red";
+          }else{
+            context.fillStyle=options.lineColor;
           }
           context.beginPath();
           context.arc(cx, cy, r, 0, 2 * Math.PI);

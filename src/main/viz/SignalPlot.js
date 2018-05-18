@@ -191,9 +191,9 @@ class SignalPlotCanvas extends TiledCanvas {
     // event.preventDefault();
   }
 
-  update(newOptions: Object) {
-    this.options = newOptions;
-  }
+  // update(newOptions: Object) {
+  //   this.options = newOptions;
+  // }
 
   yScaleForRef(maxSignal: number, topPadding: number, bottomPadding: number): (y: number) => number {
     return scale.linear()
@@ -281,10 +281,10 @@ class SignalPlot extends React.Component {
   componentDidUpdate(prevProps: any, prevState: any) {
     var shouldUpdate = false;
 
-    if (this.props.options != prevProps.options){
-      this.handleOptionsChange(prevProps.options);
-      shouldUpdate = true;
-    }
+    // if (this.props.options != prevProps.options){
+    //   this.handleOptionsChange(prevProps.options);
+    //   shouldUpdate = true;
+    // }
 
     if (!shallowEquals(prevProps, this.props) ||
         !shallowEquals(prevState, this.state)) {
@@ -297,61 +297,61 @@ class SignalPlot extends React.Component {
     }
   }
 
-  handleOptionsChange(oldOpts: Object) {
-    this.tiles.invalidateAll();
-
-    if (oldOpts.hideNonBaseCalled != this.props.options.hideNonBaseCalled) {
-      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
-      this.tiles.invalidateAll();
-      this.updateVisualization();
-      //this.drawYScale();
-    } else if(oldOpts.SignalLineQuarter != this.props.options.SignalLineQuarter){
-      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
-      this.tiles.invalidateAll();
-      this.updateVisualization();
-      //this.drawYScale();
-    } else if(oldOpts.SignalLineHalf != this.props.options.SignalLineHalf){
-      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
-      this.tiles.invalidateAll();
-      this.updateVisualization();
-      //this.drawYScale();
-    } else if(oldOpts.SignalLineNormal != this.props.options.SignalLineNormal){
-      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
-      this.tiles.invalidateAll();
-      this.updateVisualization();
-      //this.drawYScale();
-    }else if(oldOpts.SignalLineDouble != this.props.options.SignalLineDouble){
-      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
-      this.tiles.invalidateAll();
-      this.updateVisualization();
-      //this.drawYScale();
-    } else if(oldOpts.SignalLineQuad != this.props.options.SignalLineQuad){
-      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
-      this.tiles.invalidateAll();
-      this.updateVisualization();
-      //this.drawYScale();
-    } else if(oldOpts.SignalArcHalf != this.props.options.SignalArcHalf){
-      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
-      this.tiles.invalidateAll();
-      this.updateVisualization();
-      //this.drawYScale();
-    } else if(oldOpts.SignalArcNormal != this.props.options.SignalArcNormal){
-      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
-      this.tiles.invalidateAll();
-      this.updateVisualization();
-      //this.drawYScale();
-    } else if(oldOpts.SignalArcDouble != this.props.options.SignalArcDouble){
-      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
-      this.tiles.invalidateAll();
-      this.updateVisualization();
-      //this.drawYScale();
-    } else if(oldOpts.SignalArcQuad != this.props.options.SignalArcQuad){
-      this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
-      this.tiles.invalidateAll();
-      this.updateVisualization();
-      //this.drawYScale();
-    }
-  }
+  // handleOptionsChange(oldOpts: Object) {
+  //   this.tiles.invalidateAll();
+  //
+  //   if (oldOpts.hideNonBaseCalled != this.props.options.hideNonBaseCalled) {
+  //     this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+  //     this.tiles.invalidateAll();
+  //     this.updateVisualization();
+  //     //this.drawYScale();
+  //   } else if(oldOpts.SignalLineQuarter != this.props.options.SignalLineQuarter){
+  //     this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+  //     this.tiles.invalidateAll();
+  //     this.updateVisualization();
+  //     //this.drawYScale();
+  //   } else if(oldOpts.SignalLineHalf != this.props.options.SignalLineHalf){
+  //     this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+  //     this.tiles.invalidateAll();
+  //     this.updateVisualization();
+  //     //this.drawYScale();
+  //   } else if(oldOpts.SignalLineNormal != this.props.options.SignalLineNormal){
+  //     this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+  //     this.tiles.invalidateAll();
+  //     this.updateVisualization();
+  //     //this.drawYScale();
+  //   }else if(oldOpts.SignalLineDouble != this.props.options.SignalLineDouble){
+  //     this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+  //     this.tiles.invalidateAll();
+  //     this.updateVisualization();
+  //     //this.drawYScale();
+  //   } else if(oldOpts.SignalLineQuad != this.props.options.SignalLineQuad){
+  //     this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+  //     this.tiles.invalidateAll();
+  //     this.updateVisualization();
+  //     //this.drawYScale();
+  //   } else if(oldOpts.SignalArcHalf != this.props.options.SignalArcHalf){
+  //     this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+  //     this.tiles.invalidateAll();
+  //     this.updateVisualization();
+  //     //this.drawYScale();
+  //   } else if(oldOpts.SignalArcNormal != this.props.options.SignalArcNormal){
+  //     this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+  //     this.tiles.invalidateAll();
+  //     this.updateVisualization();
+  //     //this.drawYScale();
+  //   } else if(oldOpts.SignalArcDouble != this.props.options.SignalArcDouble){
+  //     this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+  //     this.tiles.invalidateAll();
+  //     this.updateVisualization();
+  //     //this.drawYScale();
+  //   } else if(oldOpts.SignalArcQuad != this.props.options.SignalArcQuad){
+  //     this.tiles = new SignalPlotCanvas(this.props.height, this.props.options);
+  //     this.tiles.invalidateAll();
+  //     this.updateVisualization();
+  //     //this.drawYScale();
+  //   }
+  // }
 
   drawYScale(){
     var canvas = ReactDOM.findDOMNode(this),
@@ -394,125 +394,125 @@ class SignalPlot extends React.Component {
 SignalPlot.displayName = 'signalplot';
 
 SignalPlot.displayName = 'signalplot';
-SignalPlot.defaultOptions = {
-
-  hideNonBaseCalled: true,
-  SignalLineQuarter: false,
-  SignalLineHalf: false,
-  SignalLineNormal: true,
-  SignalLineDouble: false,
-  SignalLineQuad: false,
-
-  SignalArcHalf: false,
-  SignalArcNormal: false,
-  SignalArcDouble: true,
-  SignalArcQuad: false
-};
-
-SignalPlot.getOptionsMenu = function(options: Object): any {
-  return [
-    {key: 'hide-non-basecalled', label: 'Hide Non Basecalled Events', checked: options.hideNonBaseCalled},
-    '-',
-    {key: 'sline-quarter', label: 'Signal Line Quarter (1/4px)', checked: options.SignalLineQuarter},
-    {key: 'sline-half', label: 'Signal Line Half (1/2px)', checked: options.SignalLineHalf},
-    {key: 'sline-normal', label: 'Signal Line Normal (1px)', checked: options.SignalLineNormal},
-    {key: 'sline-double', label: 'Signal Line Double (2px)', checked: options.SignalLineDouble},
-    {key: 'sline-quad', label: 'Signal Line Quad (4px)', checked: options.SignalLineQuad},
-    '-',
-    {key: 'sarc-half', label: 'Signal Arc Half (1/2)', checked: options.SignalArcHalf},
-    {key: 'sarc-normal', label: 'Signal Arc Normal (1)', checked: options.SignalArcNormal},
-    {key: 'sarc-double', label: 'Signal Arc Double (2)', checked: options.SignalArcDouble},
-    {key: 'sarc-quad', label: 'Signal Arc Quad (4)', checked: options.SignalArcQuad}
-  ];
-};
-
-
-SignalPlot.handleSelectOption = function(key: string, oldOptions: Object): Object {
-  var opts = _.clone(oldOptions);
-  if (key == 'hide-non-basecalled') {
-    opts.hideNonBaseCalled = !opts.hideNonBaseCalled;
-    return opts;
-  } else if(key == 'sline-quarter'){
-    opts.SignalLineQuarter = !opts.SignalLineQuarter;
-    if (opts.SignalLineQuarter) {
-      opts.SignalLineHalf = false;
-      opts.SignalLineNormal = false;
-      opts.SignalLineDouble = false;
-      opts.SignalLineQuad = false;
-    }
-    return opts;
-  } else if(key == 'sline-half'){
-    opts.SignalLineHalf = !opts.SignalLineHalf;
-    if(opts.SignalLineHalf) {
-      opts.SignalLineQuarter = false;
-      opts.SignalLineNormal = false;
-      opts.SignalLineDouble = false;
-      opts.SignalLineQuad = false;
-    }
-    return opts;
-  } else if(key == 'sline-normal'){
-    opts.SignalLineNormal = !opts.SignalLineNormal;
-    if(opts.SignalLineNormal){
-      opts.SignalLineQuarter = false;
-      opts.SignalLineHalf = false;
-      opts.SignalLineDouble = false;
-      opts.SignalLineQuad = false;
-    }
-    return opts;
-  } else if(key == 'sline-double'){
-    opts.SignalLineDouble = !opts.SignalLineDouble;
-    if(opts.SignalLineDouble){
-      opts.SignalLineQuarter = false;
-      opts.SignalLineHalf = false;
-      opts.SignalLineNormal = false;
-      opts.SignalLineQuad = false;
-    }
-    return opts;
-  } else if(key == 'sline-quad'){
-    opts.SignalLineQuad = !opts.SignalLineQuad;
-    if(opts.SignalLineQuad){
-      opts.SignalLineQuarter = false;
-      opts.SignalLineHalf = false;
-      opts.SignalLineNormal = false;
-      opts.SignalLineDouble = false;
-    }
-    return opts;
-
-  } else if(key == 'sarc-half'){
-    opts.SignalArcHalf = !opts.SignalArcHalf;
-    if(opts.SignalArcHalf){
-      opts.SignalArcNormal = false;
-      opts.SignalArcDouble = false;
-      opts.SignalArcQuad = false;
-    }
-    return opts;
-  } else if(key == 'sarc-normal'){
-    opts.SignalArcNormal = !opts.SignalArcNormal;
-    if(opts.SignalArcNormal){
-      opts.SignalArcHalf = false;
-      opts.SignalArcDouble = false;
-      opts.SiganlArcQuad = false;
-    }
-    return opts;
-  } else if(key == 'sarc-double'){
-    opts.SignalArcDouble = !opts.SignalArcDouble;
-    if(opts.SignalArcDouble){
-      opts.SignalArcHalf = false;
-      opts.SignalArcNormal = false;
-      opts.SignalArcQuad = false;
-    }
-    return opts;
-  } else if(key == 'sarc-quad'){
-    opts.SignalArcQuad = !opts.SignalArcQuad;
-    if(opts.SignalAarcQuad){
-      opts.SignalArcHalf = false;
-      opts.SignalArcNormal = false;
-      opts.SignalArcDouble = false;
-    }
-    return opts;
-  }
-  return oldOptions;  // no change
-};
+// SignalPlot.defaultOptions = {
+//
+//   hideNonBaseCalled: true,
+//   SignalLineQuarter: false,
+//   SignalLineHalf: false,
+//   SignalLineNormal: true,
+//   SignalLineDouble: false,
+//   SignalLineQuad: false,
+//
+//   SignalArcHalf: false,
+//   SignalArcNormal: false,
+//   SignalArcDouble: true,
+//   SignalArcQuad: false
+// };
+//
+// SignalPlot.getOptionsMenu = function(options: Object): any {
+//   return [
+//     {key: 'hide-non-basecalled', label: 'Hide Non Basecalled Events', checked: options.hideNonBaseCalled},
+//     '-',
+//     {key: 'sline-quarter', label: 'Signal Line Quarter (1/4px)', checked: options.SignalLineQuarter},
+//     {key: 'sline-half', label: 'Signal Line Half (1/2px)', checked: options.SignalLineHalf},
+//     {key: 'sline-normal', label: 'Signal Line Normal (1px)', checked: options.SignalLineNormal},
+//     {key: 'sline-double', label: 'Signal Line Double (2px)', checked: options.SignalLineDouble},
+//     {key: 'sline-quad', label: 'Signal Line Quad (4px)', checked: options.SignalLineQuad},
+//     '-',
+//     {key: 'sarc-half', label: 'Signal Arc Half (1/2)', checked: options.SignalArcHalf},
+//     {key: 'sarc-normal', label: 'Signal Arc Normal (1)', checked: options.SignalArcNormal},
+//     {key: 'sarc-double', label: 'Signal Arc Double (2)', checked: options.SignalArcDouble},
+//     {key: 'sarc-quad', label: 'Signal Arc Quad (4)', checked: options.SignalArcQuad}
+//   ];
+// };
+//
+//
+// SignalPlot.handleSelectOption = function(key: string, oldOptions: Object): Object {
+//   var opts = _.clone(oldOptions);
+//   if (key == 'hide-non-basecalled') {
+//     opts.hideNonBaseCalled = !opts.hideNonBaseCalled;
+//     return opts;
+//   } else if(key == 'sline-quarter'){
+//     opts.SignalLineQuarter = !opts.SignalLineQuarter;
+//     if (opts.SignalLineQuarter) {
+//       opts.SignalLineHalf = false;
+//       opts.SignalLineNormal = false;
+//       opts.SignalLineDouble = false;
+//       opts.SignalLineQuad = false;
+//     }
+//     return opts;
+//   } else if(key == 'sline-half'){
+//     opts.SignalLineHalf = !opts.SignalLineHalf;
+//     if(opts.SignalLineHalf) {
+//       opts.SignalLineQuarter = false;
+//       opts.SignalLineNormal = false;
+//       opts.SignalLineDouble = false;
+//       opts.SignalLineQuad = false;
+//     }
+//     return opts;
+//   } else if(key == 'sline-normal'){
+//     opts.SignalLineNormal = !opts.SignalLineNormal;
+//     if(opts.SignalLineNormal){
+//       opts.SignalLineQuarter = false;
+//       opts.SignalLineHalf = false;
+//       opts.SignalLineDouble = false;
+//       opts.SignalLineQuad = false;
+//     }
+//     return opts;
+//   } else if(key == 'sline-double'){
+//     opts.SignalLineDouble = !opts.SignalLineDouble;
+//     if(opts.SignalLineDouble){
+//       opts.SignalLineQuarter = false;
+//       opts.SignalLineHalf = false;
+//       opts.SignalLineNormal = false;
+//       opts.SignalLineQuad = false;
+//     }
+//     return opts;
+//   } else if(key == 'sline-quad'){
+//     opts.SignalLineQuad = !opts.SignalLineQuad;
+//     if(opts.SignalLineQuad){
+//       opts.SignalLineQuarter = false;
+//       opts.SignalLineHalf = false;
+//       opts.SignalLineNormal = false;
+//       opts.SignalLineDouble = false;
+//     }
+//     return opts;
+//
+//   } else if(key == 'sarc-half'){
+//     opts.SignalArcHalf = !opts.SignalArcHalf;
+//     if(opts.SignalArcHalf){
+//       opts.SignalArcNormal = false;
+//       opts.SignalArcDouble = false;
+//       opts.SignalArcQuad = false;
+//     }
+//     return opts;
+//   } else if(key == 'sarc-normal'){
+//     opts.SignalArcNormal = !opts.SignalArcNormal;
+//     if(opts.SignalArcNormal){
+//       opts.SignalArcHalf = false;
+//       opts.SignalArcDouble = false;
+//       opts.SiganlArcQuad = false;
+//     }
+//     return opts;
+//   } else if(key == 'sarc-double'){
+//     opts.SignalArcDouble = !opts.SignalArcDouble;
+//     if(opts.SignalArcDouble){
+//       opts.SignalArcHalf = false;
+//       opts.SignalArcNormal = false;
+//       opts.SignalArcQuad = false;
+//     }
+//     return opts;
+//   } else if(key == 'sarc-quad'){
+//     opts.SignalArcQuad = !opts.SignalArcQuad;
+//     if(opts.SignalAarcQuad){
+//       opts.SignalArcHalf = false;
+//       opts.SignalArcNormal = false;
+//       opts.SignalArcDouble = false;
+//     }
+//     return opts;
+//   }
+//   return oldOptions;  // no change
+// };
 
 
 module.exports = SignalPlot;

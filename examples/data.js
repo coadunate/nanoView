@@ -13,14 +13,8 @@ var sources = [
     name: "Signal Plot"
   },
   {
-    viz: pileup.viz.location(),
-    name: 'Location'
-  },
-  {
-    viz: pileup.viz.pileup(),
-    data: bamSource,
-    cssClass: 'normal',
-    name: 'Alignments'
+    viz: pileup.viz.scale(),
+    name: 'Scale'
   },
   {
     viz: pileup.viz.genome(),
@@ -31,14 +25,20 @@ var sources = [
     name: 'Reference'
   },
   {
-    viz: pileup.viz.scale(),
-    name: 'Scale'
+    viz: pileup.viz.location(),
+    name: 'Location'
   },
   {
     viz: pileup.viz.coverage(),
     data: bamSource,
     cssClass: 'normal',
     name: 'Coverage'
+  },
+  {
+    viz: pileup.viz.pileup(),
+    data: bamSource,
+    cssClass: 'normal',
+    name: 'Alignments'
   }
 ];
 var range = {contig: 'burn-in', start: 1, stop: 157};
