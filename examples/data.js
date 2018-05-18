@@ -41,4 +41,4 @@ var sources = [
     name: 'Coverage'
   }
 ];
-var range = {contig: 'burn-in', start: 1, stop: 20};
+var range = {contig: 'burn-in', start: 1, stop: 157};
