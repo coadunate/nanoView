@@ -363,6 +363,7 @@
     }
 
     function onZoom() {
+        d3.event.preventDefault();
         // clearTimeout(zoomEndTimeout);
         // draw(randomIndex,drawingOptions);
         // xAxisSvg.call(xAxis);
@@ -374,6 +375,7 @@
     function onZoomEnd(dOpts) {
         // when zooming is stopped, create a delay before
         // redrawing the full plot
+        d3.event.preventDefault();
         if(dOpts)
           draw(null,dOpts);
         else
