@@ -18,7 +18,7 @@ import ContigInterval from '../ContigInterval';
 import dataCanvas from 'data-canvas';
 import d3utils from './d3utils';
 import TiledCanvas from './TiledCanvas';
-import _ from 'underscore';
+//import _ from 'underscore';
 //import style from '../style';
 
 
@@ -279,7 +279,7 @@ class SignalPlot extends React.Component {
   }
 
   componentDidUpdate(prevProps: any, prevState: any) {
-    var shouldUpdate = false;
+    //var shouldUpdate = false;
 
     // if (this.props.options != prevProps.options){
     //   this.handleOptionsChange(prevProps.options);
