@@ -39,9 +39,9 @@
 <body>
 
 </div>
-<div style="margin-left: 500px;display:inline-block;padding-top:5px;" id="mainButtons"></div>
+<div style="margin-left: 10px;display:inline-block;padding-top:5px;" id="mainButtons"></div>
 <br />
-<img id="infoImage" src="tayab.png" style="margin-left: 100px;margin-top: 50px;" width="1268" height="500" alt="">
+<img id="infoImage" src="nanoraw_tayab.png" style="margin-left: 100px;margin-top: 100px;" width="1268" height="500" alt="">
 <br />
 <svg id="axis-svg" class="plot"></svg>
 <canvas id="plot-canvas" class="plot"></canvas>
@@ -78,7 +78,7 @@
   var infoImage = document.getElementById("infoImage");
 
   var imgButton = document.createElement("BUTTON");
-  imgButton.appendChild(document.createTextNode("Load Image"));
+  imgButton.appendChild(document.createTextNode("LOAD IMAGE"));
   // imgButton.classList.add("btn");
   // imgButton.classList.add("btn-primary");
   mainButtonsDiv.appendChild(imgButton);
@@ -90,7 +90,7 @@
   mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' ')))
 
   var unloadImage = document.createElement("BUTTON");
-  unloadImage.appendChild(document.createTextNode("Unload Image"));
+  unloadImage.appendChild(document.createTextNode("UNLOAD IMAGE"));
   // unloadImage.classList.add("btn");
   // unloadImage.classList.add("btn-primary");
   mainButtonsDiv.appendChild(unloadImage);
@@ -137,14 +137,14 @@
   mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' ')))
 
   tomboPlusRawButton = document.createElement("BUTTON");
-  tomboPlusRawButton.appendChild(document.createTextNode("TOMBO EVENTS + RAW SIGNAL"));
+  tomboPlusRawButton.appendChild(document.createTextNode("TOMBO + NORMALIZED SIGNAL"));
   // tomboPlusRawButton.classList.add("btn");
   // tomboPlusRawButton.classList.add("btn-default");
   mainButtonsDiv.appendChild(tomboPlusRawButton);
   tomboPlusRawButton.addEventListener('click',function(){
     removeRendering();
     addons.non_basecalled = true;
-    renderEventData('206.167.183.18','tombo-may26',2,addons);
+    renderEventData('206.167.183.18','tombo-may30',2,addons);
     showButtons('tombo-png');
   });
 
@@ -244,7 +244,7 @@
     var subsetSize = 100;
     var drawingOptions = {
       pointRadius: 3,
-      lineWidth: 3,
+      lineWidth: 1,
       lineColor: 'blue'
     }
 
@@ -260,8 +260,13 @@
       "#FE2EF7"
     ];
 
-    // save the index of the currently selected point
-    var selectedPoint;
+    var BASECOLORS = {
+      'A': 'green',
+      'G': 'orange',
+      'C': 'blue',
+      'T': 'red'
+    };
+
 
 
 
@@ -296,11 +301,12 @@
         if(i%2!=0){
           var x = []; // contains [x,cigarStatus]
           var y = [];
+          var base = [];
           var subEv = [];
           if(dataType == 1 || dataType == 2){ // tombo dataset is enclosed in an arry.
             for(var j = 0; j < result[i][0].length; j++){
                 if(j%2!= 0){
-                subEv.push(result[i][0][j]);
+                  subEv.push(result[i][0][j]);
               }
             }
           } else if(dataType == 0){
@@ -316,6 +322,7 @@
               _x.push(subEv[k][l][0]); // x value
               _x.push(subEv[k][l][0]); // cigar status
               x.push(_x);
+              base.push(subEv[k][l][2]);
               y.push(Number(subEv[k][l][1]));
 
             }
@@ -324,26 +331,24 @@
 
           eventData.push(x);
           eventData.push(y);
+          eventData.push(base);
 
         }
       }
       finalReads = [];
-      for(var x =0; x < eventData.length; x += 2){
-        console.log(result[x])
-        if(result[x] == '1182ad2e-10aa-421a-8fd3-39256b62a11b'){
-          var arr = [];
-          arr.push(eventData[x]);
-          arr.push(eventData[x+1]);
-          arr.push(result[x]);
-          finalReads.push(arr);
-        }
+      for(var x =0; x < eventData.length; x += 3){
+        var arr = [];
+        arr.push(eventData[x]);
+        arr.push(eventData[x+1]);
+        arr.push(eventData[x+2]);
+        arr.push(result[x]);
+        finalReads.push(arr);
       }
       return finalReads;
       // event.preventDefault();
     }
 
     resultEvent = getEventData(range);
-    console.log(resultEvent);
     var data = [];
     for(var x = 0; x < resultEvent.length; x++){
       var inter_data = [];
@@ -352,7 +357,8 @@
           var datum = {
             y: resultEvent[x][0][a][0], // x value
             x: resultEvent[x][1][a],
-            name: resultEvent[x][2],
+            name: resultEvent[x][3],
+            base: resultEvent[x][2][a],
             cigarStatus: resultEvent[x][0][a][1], // Cigar status
             i: a,
             selected: false
@@ -391,7 +397,7 @@
 
     });
     var xScale = d3.scale.linear()
-        .domain([xRange[0],xRange[1]])
+        .domain([2,80])
         .range([0, width]);
 
     // var yScale = d3.scale.linear()
@@ -400,7 +406,7 @@
 
 
     var yScale = d3.scale.linear()
-        .domain([-3,3])
+        .domain([-4,3.25])
         .range([height, 0]);
 
     var xAxis = d3.svg.axis()
@@ -530,71 +536,68 @@
         context.clearRect(0, 0, fullWidth, fullHeight);
         context.strokeWidth = 1;
         context.strokeStyle = 'blue';
-        // if an index parameter is supplied, we only want to draw points
-        // with indices in that array
-        if(index) {
-            index.forEach(function(i) {
-              for(var j = 0; j < data.length; j++){
-                var point = data[j][i];
-                var nextPoint = i < data[j].length-1 ? data[j][i+1] : 0;
-                context.beginPath();
-                drawLine(point, 2,nextPoint,options, mid_point);
-              }
 
-            });
-        }
-        // draw the full dataset otherwise
-        else {
-            //data.sort(function(a,b){ return a[0].name.localeCompare(b[0].name); });
-            for(var m = 0; m < data.length; m++){
-              drawingOptions.lineColor = READ_COLORS[m];
-              for(var i = 0; i < data[m].length; i++){
-                var point = data[m][i];
-                var nextPoint = i < data[m].length-1 ? data[m][i+1] : 0;
-                context.beginPath();
-                drawLine(point,options.pointRadius, nextPoint, drawingOptions, mid_point);
-                //console.log(point.name);
-              }
-            }
+        context.beginPath();
+        //data.sort(function(a,b){ return a[0].name.localeCompare(b[0].name); });
+        for(var m = 0; m < data.length; m++){
+          drawingOptions.lineColor = READ_COLORS[m];
+          for(var i = 0; i < data[m].length; i++){
+            var point = data[m][i];
+            var nextPoint = i < data[m].length-1 ? data[m][i+1] : 0;
+            // context.beginPath();
+            drawLine(point,options.pointRadius, nextPoint, drawingOptions, mid_point);
+            //console.log(point.name);
+          }
         }
     }
 
     function drawLine(point, r, nextPoint,options, mPoint) {
-        if(addition.non_basecalled || (!addition.non_basecalled && (point.x%1 == 0 && nextPoint.x %1 == 0)) ) { // NON BASECALLED
-          var cx = xScale(point.x);
-          var cy = yScale(point.y);
+      if(addition.non_basecalled || (!addition.non_basecalled && (point.x%1 == 0 && nextPoint.x %1 == 0)) ) { // NON BASECALLED
+        var cx = xScale(point.x);
+        var cy = yScale(point.y);
 
-          var nX = xScale(nextPoint.x);
-          var nY = yScale(nextPoint.y);
-
-          // console.log("POINTX: " + point.x);
+        var nX = xScale(nextPoint.x);
+        var nY = yScale(nextPoint.y);
 
 
-          if(addition.line){
-            // context.beginPath();
-            context.lineTo(cx,cy);
-            context.lineTo(nX,cy);
-            context.lineTo(nX,nY);
-            context.lineWidth= options.lineWidth;
-            context.strokeStyle=options.lineColor;
-            // context.closePath();
-            context.stroke();
-          }
+        if(addition.line){
+          // context.beginPath();
+          context.lineTo(cx,cy);
+          // context.lineTo(nX,cy);
+          // context.lineTo(nX,nY);
+          context.lineWidth= options.lineWidth;
+          context.strokeStyle=options.lineColor;
+          // context.closePath();
+          context.stroke();
+        }
 
-          if(point.x %1 != 0){
-            context.fillStyle="gray";
-          }else{
-            context.fillStyle=options.lineColor;
-          }
-          context.beginPath();
-          context.arc(cx, cy, r, 0, 2 * Math.PI);
-          context.closePath();
-          context.fill();
-      }
+        // if(point.x %1 != 0){
+        //   context.fillStyle="gray";
+        // }else{
+        //   context.fillStyle=options.lineColor;
+        // }
+        context.beginPath();
+        context.arc(cx, cy, r, 0, 2 * Math.PI);
+        context.closePath();
+        context.fill();
 
+        if(point.x%1==0){
+          var bcolor = "black";
+          if(point.base == 'G') bcolor = 'orange';
+          else if(point.base == 'C') bcolor = 'blue';
+          else if(point.base == 'A') bcolor = 'green';
+          else if(point.base == 'T') bcolor = 'red';
+          context.font = "20px Arial"
+          context.fillStyle=bcolor;
+          context.fillText(point.base,xScale(point.x+0.5),yScale(-2.5));
+          context.fillStyle="gray";
 
-
+        }
     }
+
+
+
+  }
 
     function euclideanDistance(x1, y1, x2, y2) {
         return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));

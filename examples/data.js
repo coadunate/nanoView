@@ -12,10 +12,10 @@ var sources = [
     data: bamSource,
     name: "Signal Plot"
   },
-  {
-    viz: pileup.viz.scale(),
-    name: 'Scale'
-  },
+  // {
+  //   viz: pileup.viz.scale(),
+  //   name: 'Scale'
+  // },
   {
     viz: pileup.viz.genome(),
     isReference: true,
@@ -23,22 +23,22 @@ var sources = [
       url: '/test-data/lambda_ref.2bit'
     }),
     name: 'Reference'
-  },
-  {
-    viz: pileup.viz.location(),
-    name: 'Location'
-  },
-  {
-    viz: pileup.viz.coverage(),
-    data: bamSource,
-    cssClass: 'normal',
-    name: 'Coverage'
-  },
-  {
-    viz: pileup.viz.pileup(),
-    data: bamSource,
-    cssClass: 'normal',
-    name: 'Alignments'
   }
+  // {
+  //   viz: pileup.viz.location(),
+  //   name: 'Location'
+  // },
+  // {
+  //   viz: pileup.viz.coverage(),
+  //   data: bamSource,
+  //   cssClass: 'normal',
+  //   name: 'Coverage'
+  // },
+  // {
+  //   viz: pileup.viz.pileup(),
+  //   data: bamSource,
+  //   cssClass: 'normal',
+  //   name: 'Alignments'
+  // }
 ];
-var range = {contig: 'burn-in', start: 3, stop: 4};
+var range = {contig: 'burn-in', start: 2, stop: 80};
