@@ -565,16 +565,16 @@
 
 
 
-          if(addition.line){
-            // context.beginPath();
-            context.lineTo(cx,cy);
-            context.lineTo(nX,cy);
-            context.lineTo(nX,nY);
-            context.lineWidth= options.lineWidth;
-            context.strokeStyle=options.lineColor;
-            // context.closePath();
-            context.stroke();
-          }
+          // if(addition.line){
+          //   // context.beginPath();
+          //   context.lineTo(cx,cy);
+          //   context.lineTo(nX,cy);
+          //   context.lineTo(nX,nY);
+          //   context.lineWidth= options.lineWidth;
+          //   context.strokeStyle=options.lineColor;
+          //   // context.closePath();
+          //   context.stroke();
+          // }
 
           if(point.x %1 != 0){
             context.fillStyle="gray";
@@ -585,7 +585,7 @@
           context.arc(cx, cy, r, 0, 2 * Math.PI);
           context.closePath();
           context.fill();
-        }
+      }
 
 
 
