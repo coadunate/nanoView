@@ -103,7 +103,7 @@
   mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' ● ')))
 
   var albacoreButton = document.createElement('BUTTON');
-  albacoreButton.appendChild(document.createTextNode("ALBACORE"));
+  albacoreButton.appendChild(document.createTextNode("ALBACORE EVENTS"));
   // albacoreButton.classList.add("btn");
   // albacoreButton.classList.add("btn-default");
   mainButtonsDiv.appendChild(albacoreButton);
@@ -113,10 +113,19 @@
     showButtons('albacore');
   });
 
+  albacorePlusRawButton = document.createElementById("BUTTON");
+  albacorePlusRawButton.appendChild(document.createTextNode("ALBACORE + RAW SIGNAL"));
+  mainButtonsDiv.appendChild(albacorePlusRawButton);
+  albacorePlusRawButton.addEventListener('click',function(){
+    removeRendering();
+    //
+    showButtons();
+  });
+
   mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' ')))
 
   tomboButton = document.createElement("BUTTON")
-  tomboButton.appendChild(document.createTextNode("TOMBO"));
+  tomboButton.appendChild(document.createTextNode("TOMBO EVENTS"));
   // tomboButton.classList.add("btn");
   // tomboButton.classList.add("btn-default");
   mainButtonsDiv.appendChild(tomboButton);
@@ -128,17 +137,18 @@
 
   mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' ')))
 
-  tomboPNGButton = document.createElement("BUTTON");
-  tomboPNGButton.appendChild(document.createTextNode("TOMBO PNG"));
-  // tomboPNGButton.classList.add("btn");
-  // tomboPNGButton.classList.add("btn-default");
-  mainButtonsDiv.appendChild(tomboPNGButton);
-  tomboPNGButton.addEventListener('click',function(){
+  tomboPlusRawButton = document.createElement("BUTTON");
+  tomboPlusRawButton.appendChild(document.createTextNode("TOMBO EVENTS + RAW SIGNAL"));
+  // tomboPlusRawButton.classList.add("btn");
+  // tomboPlusRawButton.classList.add("btn-default");
+  mainButtonsDiv.appendChild(tomboPlusRawButton);
+  tomboPlusRawButton.addEventListener('click',function(){
     removeRendering();
     addons.non_basecalled = true;
     renderEventData('206.167.183.18','tombo-may26',2,addons);
     showButtons('tombo-png');
   });
+
 
 
   mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' || → ')))
