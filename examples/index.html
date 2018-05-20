@@ -415,6 +415,7 @@
     // create zoom behaviour
     var zoomBehaviour = d3.behavior.zoom()
         .x(xScale)
+        .y(yScale);
         .scaleExtent([1, 1000])
         .on("zoom", onZoomEnd)
         .on("zoomend", onZoomEnd);
