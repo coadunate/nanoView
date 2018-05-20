@@ -387,7 +387,7 @@
 
     });
     var xScale = d3.scale.linear()
-        .domain([3,57])
+        .domain([3,10])
         .range([0, width]);
 
     // var yScale = d3.scale.linear()
@@ -396,7 +396,7 @@
 
 
     var yScale = d3.scale.linear()
-        .domain([yRange[0],yRange[1]])
+        .domain([-3,3])
         .range([height, 0]);
 
     var xAxis = d3.svg.axis()
