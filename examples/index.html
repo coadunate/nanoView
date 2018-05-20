@@ -113,12 +113,11 @@
     showButtons('albacore');
   });
 
-  albacorePlusRawButton = document.createElementById("BUTTON");
+  albacorePlusRawButton = document.createElement("BUTTON");
   albacorePlusRawButton.appendChild(document.createTextNode("ALBACORE + RAW SIGNAL"));
   mainButtonsDiv.appendChild(albacorePlusRawButton);
   albacorePlusRawButton.addEventListener('click',function(){
     removeRendering();
-    //
     showButtons();
   });
 
