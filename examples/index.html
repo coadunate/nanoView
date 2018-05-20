@@ -62,7 +62,7 @@
 <script type="text/javascript">
 
   addons = {
-    line: false,
+    line: true,
     non_basecalled: false
   }
 
@@ -228,6 +228,7 @@
       .append("g")
       .attr("transform", "translate(" + margin.left + "," +
           (margin.top) + ")");
+
 
   // get the canvas drawing context
   var context = canvas.node().getContext('2d');
@@ -417,6 +418,8 @@
         .scaleExtent([1, 1000])
         .on("zoom", onZoomEnd)
         .on("zoomend", onZoomEnd);
+
+    zoomBehaviour.translate([1,57]).scale(57);
 
     // append x-axis, y-axis
     var xAxisSvg = svg.append('g')

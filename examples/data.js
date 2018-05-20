@@ -41,4 +41,4 @@ var sources = [
     name: 'Alignments'
   }
 ];
-var range = {contig: 'burn-in', start: 1, stop: 157};
+var range = {contig: 'burn-in', start: 1, stop: 57};
