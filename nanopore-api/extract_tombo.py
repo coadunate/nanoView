@@ -276,74 +276,57 @@ class Fast5Events(object):
         self.assert_events()
 
         qname_path = '/Analyses/Basecall_1D_000/BaseCalled_template/Fastq'
-        # qname_path = '/UniqueGlobalKey/tracking_id'
         dset = self.handle[qname_path]
-
-        # return dset.attrs['protocol_run_id']
         return dset.value.decode("utf-8").split('\n')[0][1:].split('_')[-2]
 
 
-    def get_list_event_data(self,event_start = -1, event_end = -1, file_path=""):
+    def get_offset(self):
+        self.assert_events()
 
+        dset = '/Analyses/RawGenomeCorrected_000/BaseCalled_template/Events'
+        dset = self.handle[dset]
+        return dset.attrs['read_start_rel_to_raw']
+
+
+    def get_list_event_data(self,event_start = -1, event_end = -1, file_path=""):
         signal_index = self.get_mean_signal_index()
         time_index = self.get_start_time_index()
         length_index = self.get_length_index()
         base = self.get_base_index()
-
         max_sig = 0
         min_sig = 100
-
         record = []
         qname = self.get_qname()
         # qname = qname.split('_')[-2]
-        pos = get_pos(file_path, qname)
+        pos = get_pos_t(file_path, qname)
+        offset = self.get_offset()
         # cigar_offsets_d = []
         # cigar_offsets_i = []
         cigar_offsets = []
-        cigar = get_cigar(file_path, qname)
+        cigar = get_cigar_t(file_path, qname)
         for i in range(len(cigar)):
             if cigar[i] == 'd':
                 cigar_offsets.append((i, 'd'))
             if cigar[i] == 'i':
                 cigar_offsets.append((i, 'i'))
         record.append(qname)
-
-        # record = "[\"" + str(self.get_qname()) + "\": "
         sub0 = []
         if event_start is -1 and event_end is -1:
             prev_move = -1
             # get all the events of a given fast5 file
-            #print("index,signal,time,model,length,stdv")
             for i in range(0,self.get_event_count()):
                 if self.events[i][signal_index] > max_sig:
                     max_sig = self.events[i][signal_index]
                 if self.events[i][signal_index] < min_sig:
                     min_sig = self.events[i][signal_index]
-                        # if cigar[prev_move] !=
-                    # record.append(str("%06d" % prev_move))
-                # record.append(str(i+pos))
                 sub1 = []
                 sub0.append(str(pos + i))
                 sub1.append([str(i+pos), str(self.events[i][signal_index]),
                     str(self.events[i][time_index]),
                     str(self.events[i][length_index]), ""])
                 sub0.append(sub1)
-                # elif prev_move != -1 and self.events[i][move] == 0:
-                #     sub1.append([str(i+pos+1), str(self.events[i][signal_index]),
-                #         str(self.events[i][time_index]),
-                #         str(self.events[i][length_index])])
-                # elif prev_move != -1 and self.events[i][move] == 1:
-                #     prev_move += 1
-                #     record.append(sub1)
-                #     # record.append(str("%06d" % prev_move))
-                #     record.append(str(prev_move+pos))
-                #     sub1 = []
-                #     sub1.append([str(i+pos+1), str(self.events[i][signal_index]),
-                #         str(self.events[i][time_index]),
-                #         str(self.events[i][length_index])])
             max_min = []
             max_min.append(str(max_sig))
             max_min.append(str(min_sig))
             record.append(sub0)
-            # record.append(max_min)
             return record, max_min, cigar_offsets, pos

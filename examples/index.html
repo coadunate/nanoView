@@ -391,7 +391,7 @@
 
     });
     var xScale = d3.scale.linear()
-        .domain([3,4])
+        .domain([xRange[0],xRange[1]])
         .range([0, width]);
 
     // var yScale = d3.scale.linear()
@@ -419,7 +419,7 @@
     // create zoom behaviour
     var zoomBehaviour = d3.behavior.zoom()
         .x(xScale)
-        .y(yScale)
+        // .y(yScale)
         .scaleExtent([1, 1000])
         .on("zoom", onZoomEnd)
         .on("zoomend", onZoomEnd);
@@ -570,16 +570,16 @@
           // console.log("POINTX: " + point.x);
 
 
-          // if(addition.line){
-          //   // context.beginPath();
-          //   context.lineTo(cx,cy);
-          //   context.lineTo(nX,cy);
-          //   context.lineTo(nX,nY);
-          //   context.lineWidth= options.lineWidth;
-          //   context.strokeStyle=options.lineColor;
-          //   // context.closePath();
-          //   context.stroke();
-          // }
+          if(addition.line){
+            // context.beginPath();
+            context.lineTo(cx,cy);
+            context.lineTo(nX,cy);
+            context.lineTo(nX,nY);
+            context.lineWidth= options.lineWidth;
+            context.strokeStyle=options.lineColor;
+            // context.closePath();
+            context.stroke();
+          }
 
           if(point.x %1 != 0){
             context.fillStyle="gray";
