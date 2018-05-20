@@ -377,7 +377,7 @@
 
     });
     var xScale = d3.scale.linear()
-        .domain([1,56])
+        .domain([xRange[0],xRange[1]])
         .range([0, width]);
 
     // var yScale = d3.scale.linear()
@@ -550,7 +550,6 @@
           var nX = xScale(nextPoint.x);
           var nY = yScale(nextPoint.y);
 
-          if(point.x%1!=0)
 
 
           if(addition.line){
