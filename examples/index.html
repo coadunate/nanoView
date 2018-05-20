@@ -387,7 +387,7 @@
 
     });
     var xScale = d3.scale.linear()
-        .domain([xRange[0],xRange[1]])
+        .domain([5,57])
         .range([0, width]);
 
     // var yScale = d3.scale.linear()
@@ -419,7 +419,7 @@
         .on("zoom", onZoomEnd)
         .on("zoomend", onZoomEnd);
 
-    zoomBehaviour.translate([1,57]).scale(57);
+    // zoomBehaviour.scale(57,5);
 
     // append x-axis, y-axis
     var xAxisSvg = svg.append('g')
