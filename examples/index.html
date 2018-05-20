@@ -3,6 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" href="../style/pileup.css" />
 <link rel="stylesheet" href="demo.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <style>
 
 
@@ -38,13 +39,11 @@
 <body>
 
 </div>
-<div style="margin-left: 500px;display:inline-block;" id="mainButtons">
-  <!-- <button type="button" name="button" id="LAMBDA" onClick="removeRendering();renderEventData('206.167.183.18','aln-sorted-17');showButtons('lambda')">LAMBDA</button>
-  <button type="button" name="button" id="TOMBO" onClick="removeRendering();showButtons()">TOMBO</button> ||&rarr;</button>
-  <div id="additionalButtons" style="display:inline-block"></div> -->
-</div>
+<div style="margin-left: 500px;display:inline-block;padding-top:5px;" id="mainButtons"></div>
 <br />
-<svg id="axis-svg" class="plot" style="margin-top:40px;"></svg>
+<img id="infoImage" src="tayab.png" style="margin-left: 100px;margin-top: 50px;" width="1268" height="500" alt="">
+<br />
+<svg id="axis-svg" class="plot"></svg>
 <canvas id="plot-canvas" class="plot"></canvas>
 <div id="pileup"></div>
 </body>
@@ -69,22 +68,78 @@
 
   var mainButtonsDiv = document.getElementById("mainButtons");
 
-  var mb1 = document.createElement('BUTTON');
-  mb1.appendChild(document.createTextNode("ALBACORE"));
-  mainButtonsDiv.appendChild(mb1);
-  mb1.addEventListener('click',function(){
-    removeRendering();
-    renderEventData('206.167.183.18','aln-sorted-17',addons);
-    showButtons('lambda');
+  var imageInput = document.createElement("INPUT");
+  imageInput.setAttribute("type","text");
+  imageInput.setAttribute("placeholder","image URL");
+  mainButtonsDiv.appendChild(imageInput);
+
+  mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' ')))
+
+  var infoImage = document.getElementById("infoImage");
+
+  var imgButton = document.createElement("BUTTON");
+  imgButton.appendChild(document.createTextNode("Load Image"));
+  // imgButton.classList.add("btn");
+  // imgButton.classList.add("btn-primary");
+  mainButtonsDiv.appendChild(imgButton);
+  imgButton.addEventListener('click',function(){
+    document.getElementsByClassName("signalplot")[0].style.minHeight= "1030px";
+    infoImage.src = imageInput.value;
   });
 
-  mb2 = document.createElement("BUTTON")
-  mb2.appendChild(document.createTextNode("TOMBO"));
-  mainButtonsDiv.appendChild(mb2);
-  mb2.addEventListener('click',function(){
-    removeRendering();
-    showButtons();
+  mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' ')))
+
+  var unloadImage = document.createElement("BUTTON");
+  unloadImage.appendChild(document.createTextNode("Unload Image"));
+  // unloadImage.classList.add("btn");
+  // unloadImage.classList.add("btn-primary");
+  mainButtonsDiv.appendChild(unloadImage);
+  unloadImage.addEventListener('click',function(){
+    document.getElementsByClassName("signalplot")[0].style.minHeight= "500px";
+    infoImage.src="";
+
   });
+
+  mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' ● ')))
+
+  var albacoreButton = document.createElement('BUTTON');
+  albacoreButton.appendChild(document.createTextNode("ALBACORE"));
+  // albacoreButton.classList.add("btn");
+  // albacoreButton.classList.add("btn-default");
+  mainButtonsDiv.appendChild(albacoreButton);
+  albacoreButton.addEventListener('click',function(){
+    removeRendering();
+    renderEventData('206.167.183.18','tombo-may26',0,addons);
+    showButtons('albacore');
+  });
+
+  mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' ')))
+
+  tomboButton = document.createElement("BUTTON")
+  tomboButton.appendChild(document.createTextNode("TOMBO"));
+  // tomboButton.classList.add("btn");
+  // tomboButton.classList.add("btn-default");
+  mainButtonsDiv.appendChild(tomboButton);
+  tomboButton.addEventListener('click',function(){
+    removeRendering();
+    renderEventData('206.167.183.18','tombo-may26',1,addons);
+    showButtons('tombo');
+  });
+
+  mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' ')))
+
+  tomboPNGButton = document.createElement("BUTTON");
+  tomboPNGButton.appendChild(document.createTextNode("TOMBO PNG"));
+  // tomboPNGButton.classList.add("btn");
+  // tomboPNGButton.classList.add("btn-default");
+  mainButtonsDiv.appendChild(tomboPNGButton);
+  tomboPNGButton.addEventListener('click',function(){
+    removeRendering();
+    addons.non_basecalled = true;
+    renderEventData('206.167.183.18','tombo-may26',2,addons);
+    showButtons('tombo-png');
+  });
+
 
   mainButtonsDiv.appendChild(document.createElement('span').appendChild(document.createTextNode(' || → ')))
 
@@ -96,28 +151,46 @@
     while(additionalButtons.firstChild){
       additionalButtons.removeChild(additionalButtons.firstChild);
     }
-    if(dataset == 'lambda'){
-      div = document.getElementById("additionalButtons");
-      b1 = document.createElement('BUTTON');
-      t1 = document.createTextNode("TOGGLE LINES");
+    if(dataset == 'albacore'){
+      var b1 = document.createElement('BUTTON');
+      var t1 = document.createTextNode("TOGGLE LINES");
       b1.appendChild(t1);
       additionalButtons.appendChild(b1);
       b1.addEventListener('click',function(){
         removeRendering();
         addons.line = !addons.line;
-        renderEventData('206.167.183.18','aln-sorted-17',addons)
+        renderEventData('206.167.183.18','tombo-may26',0,addons);
       });
 
       additionalButtons.appendChild(document.createElement("span").appendChild(document.createTextNode(" -- ")));
 
-      b3 = document.createElement("BUTTON");
-      t3 = document.createTextNode("TOGGLE NON-BASECALLED");
+      var b3 = document.createElement("BUTTON");
+      var t3 = document.createTextNode("TOGGLE NON-BASECALLED");
       b3.appendChild(t3);
       additionalButtons.appendChild(b3);
       b3.addEventListener('click',function(){
         removeRendering();
         addons.non_basecalled = !addons.non_basecalled;
-        renderEventData('206.167.183.18','aln-sorted-17',addons)
+        renderEventData('206.167.183.18','tombo-may26',0,addons);
+      });
+    } else if(dataset == 'tombo'){
+      var b4 = document.createElement("BUTTON");
+      b4.appendChild(document.createTextNode("TOGGLE LINES"));
+      additionalButtons.appendChild(b4);
+      b4.addEventListener('click',function(){
+        removeRendering();
+        addons.line = !addons.line;
+        renderEventData('206.167.183.18','tombo-may26',1,addons);
+      });
+
+    } else if(dataset == 'tombo-png'){
+      var b5 = document.createElement("BUTTON");
+      b5.appendChild(document.createTextNode("TOGGLE LINE"));
+      additionalButtons.append(b5);
+      b5.addEventListener('click',function(){
+        removeRendering();
+        addons.line = !addons.line;
+        renderEventData('206.167.183.18','tombo-may26',2,addons);
       });
     }
   }
@@ -139,12 +212,13 @@
       .style("transform", "translate(" + (margin.left + 1) +
           "px" + "," + (margin.top + 1) + "px" + ")");
 
+
   var svg = d3.select("#axis-svg")
       .attr("width", fullWidth)
       .attr("height", fullHeight)
       .append("g")
       .attr("transform", "translate(" + margin.left + "," +
-          margin.top + ")");
+          (margin.top) + ")");
 
   // get the canvas drawing context
   var context = canvas.node().getContext('2d');
@@ -154,13 +228,13 @@
     svg.selectAll("*").remove();
   }
 
-  function renderEventData(url,datasetname, addition = {lines: false}){
+  function renderEventData(url,datasetname, dataType, addition = {lines: false}){
     var pileupRange = p.getRange() ? p.getRange() : range;
     // constants
     var subsetSize = 100;
     var drawingOptions = {
-      pointRadius: 4,
-      lineWidth: 4,
+      pointRadius: 3,
+      lineWidth: 3,
       lineColor: 'blue'
     }
 
@@ -201,11 +275,9 @@
       var result = [];
       var xhttp = new XMLHttpRequest();
 
-      //xhttp.open("GET", "http://" + url + ":5000/getrange/start=" + range.start + "&end=" + (range.stop+1) + "&name=" + datasetname, false);
-      xhttp.open("GET", "http://" + url + ":5000/getall/name=aln-sorted-17", false);
+      xhttp.open("GET", "http://" + url + ":5000/getall/name=" + datasetname + "&data="  + dataType, false);
       xhttp.onload = function() {
         result = JSON.parse(xhttp.responseText);
-
       };
       xhttp.send();
       var eventData = [];
@@ -215,9 +287,17 @@
           var x = []; // contains [x,cigarStatus]
           var y = [];
           var subEv = [];
-          for(var j = 0; j < result[i].length; j++){
-            if(j%2!= 0){
-              subEv.push(result[i][j]);
+          if(dataType == 1 || dataType == 2){ // tombo dataset is enclosed in an arry.
+            for(var j = 0; j < result[i][0].length; j++){
+                if(j%2!= 0){
+                subEv.push(result[i][0][j]);
+              }
+            }
+          } else if(dataType == 0){
+            for(var j = 0; j < result[i].length; j++){
+              if(j%2!= 0){
+                subEv.push(result[i][j]);
+              }
             }
           }
           for(var k = 0; k < subEv.length; k++){
@@ -226,9 +306,11 @@
               _x.push(subEv[k][l][0]); // x value
               _x.push(subEv[k][l][0]); // cigar status
               x.push(_x);
-              y.push(subEv[k][l][1]);
+              y.push(Number(subEv[k][l][1]));
+
             }
           }
+
 
           eventData.push(x);
           eventData.push(y);
@@ -248,49 +330,63 @@
     }
 
     resultEvent = getEventData(range);
-
     var data = [];
     for(var x = 0; x < resultEvent.length; x++){
       var inter_data = [];
       for(var a = 0; a < resultEvent[x][0].length; a++){
-        var datum = {
-          x: resultEvent[x][0][a][0], // x value
-          y: resultEvent[x][1][a],
-          name: resultEvent[x][2],
-          cigarStatus: resultEvent[x][0][a][1], // Cigar status
-          i: a,
-          selected: false
+        if(dataType == 2){
+          var datum = {
+            y: resultEvent[x][0][a][0], // x value
+            x: resultEvent[x][1][a],
+            name: resultEvent[x][2],
+            cigarStatus: resultEvent[x][0][a][1], // Cigar status
+            i: a,
+            selected: false
+
+          }
+        } else{
+          var datum = {
+            x: resultEvent[x][0][a][0], // x value
+            y: resultEvent[x][1][a],
+            name: resultEvent[x][2],
+            cigarStatus: resultEvent[x][0][a][1], // Cigar status
+            i: a,
+            selected: false
+
+          }
         }
         inter_data.push(datum);
-      }
 
+      }
       data.push(inter_data);
     }
 
 
-
     var xRange = [Infinity,-Infinity];
-    var yRange = [];
-    console.log(data);
+    var yRange = [Infinity,-Infinity];
     data.forEach(function(d,i){
-      _xRange = d3.extent(d, function(e){ return e.x });
+      var _xRange = d3.extent(d, function(e){ return e.x });
 
       if(_xRange[0] < xRange[0]) xRange[0] = _xRange[0];
       if(_xRange[1] > xRange[1]) xRange[1] = _xRange[1];
 
-      yRange = d3.extent(d, function(e){ return e.y });
-      //console.log(xRange);
-    })
+      var _yRange = d3.extent(d, function(e){ return e.y; });
+
+      if(_yRange[0] < yRange[0]) yRange[0] = _yRange[0];
+      if(_yRange[1] > yRange[1]) yRange[1] = _yRange[1];
+
+    });
     var xScale = d3.scale.linear()
-        .domain([1,157])
+        .domain([1,56])
         .range([0, width]);
 
     // var yScale = d3.scale.linear()
     //     .domain([yRange[0] - 5, yRange[1] + 5])
     //     .range([height, 0]);
 
+
     var yScale = d3.scale.linear()
-        .domain([50,150])
+        .domain([yRange[0],yRange[1]])
         .range([height, 0]);
 
     var xAxis = d3.svg.axis()
@@ -309,7 +405,6 @@
     // create zoom behaviour
     var zoomBehaviour = d3.behavior.zoom()
         .x(xScale)
-        .y(yScale)
         .scaleExtent([1, 1000])
         .on("zoom", onZoomEnd)
         .on("zoomend", onZoomEnd);
@@ -374,10 +469,12 @@
     function onZoomEnd(dOpts) {
         // when zooming is stopped, create a delay before
         // redrawing the full plot
+
+        var midPoint = Math.round(xScale.domain()[0] + (xScale.domain()[1]-xScale.domain()[0])/2);
         if(dOpts)
-          draw(null,dOpts);
+          draw(null,dOpts,midPoint);
         else
-          draw(null,drawingOptions);
+          draw(null,drawingOptions,midPoint);
         xAxisSvg.call(xAxis);
         yAxisSvg.call(yAxis);
 
@@ -386,12 +483,31 @@
 
         p.setRange(_range);
 
+        context.beginPath();
+        context.setLineDash([15, 20]);
+        context.moveTo(xScale(midPoint),yScale(-20));
+        context.lineTo(xScale(midPoint),0);
+        context.strokeStyle="black";
+        context.lineWidth=1;
+        context.closePath();
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(xScale(midPoint-1),yScale(-20));
+        context.lineTo(xScale(midPoint-1),0);
+        context.strokeStyle="black";
+        context.lineWidth=1;
+        context.closePath();
+        context.stroke();
+
+        context.setLineDash([0, 0]);
+
     }
 
     // the draw function draws the full dataset if no index
     // parameter supplied, otherwise it draws a subset according
     // to the indices in the index parameter
-    function draw(index=null,options) {
+    function draw(index=null,options,mid_point) {
         var active;
 
         context.clearRect(0, 0, fullWidth, fullHeight);
@@ -400,70 +516,53 @@
         // if an index parameter is supplied, we only want to draw points
         // with indices in that array
         if(index) {
-            context.beginPath();
             index.forEach(function(i) {
               for(var j = 0; j < data.length; j++){
                 var point = data[j][i];
-                var prvPoint = i < data[j].length-1 ? data[j][i+1] : 0;
-                if(!point.selected) {
-                    drawPoint(point, 2,prvPoint,options);
-                }
-                else {
-                    active = point;
-                }
+                var nextPoint = i < data[j].length-1 ? data[j][i+1] : 0;
+                context.beginPath();
+                drawLine(point, 2,nextPoint,options, mid_point);
               }
 
             });
         }
         // draw the full dataset otherwise
         else {
-            context.beginPath();
-            data.sort(function(a,b){ return a[0].name.localeCompare(b[0].name); });
+            //data.sort(function(a,b){ return a[0].name.localeCompare(b[0].name); });
             for(var m = 0; m < data.length; m++){
               drawingOptions.lineColor = READ_COLORS[m];
               for(var i = 0; i < data[m].length; i++){
                 var point = data[m][i];
-                var prvPoint = i < data[m].length-1 ? data[m][i+1] : 0;
-
-                if(!point.selected){
-                  drawPoint(point,options.pointRadius, prvPoint, drawingOptions);
-                }else {
-                  active = point;
-                }
+                var nextPoint = i < data[m].length-1 ? data[m][i+1] : 0;
+                context.beginPath();
+                drawLine(point,options.pointRadius, nextPoint, drawingOptions, mid_point);
                 //console.log(point.name);
               }
             }
         }
-
-        // ensure that the actively selected point is drawn last
-        // so it appears at the top of the draw order
-        if(active) {
-            drawPoint(active, options.pointRadius,data[1],options);
-            context.strokeStyle = 'steelblue';
-        }
     }
 
-    function drawPoint(point, r, prvPoint,options) {
-        if(addition.non_basecalled || (!addition.non_basecalled && point.x%1==0)){ // NON BASECALLED
+    function drawLine(point, r, nextPoint,options, mPoint) {
+        if(addition.non_basecalled || (!addition.non_basecalled && (point.x%1 == 0 && nextPoint.x %1 == 0)) ) { // NON BASECALLED
           var cx = xScale(point.x);
           var cy = yScale(point.y);
 
-          var pX = xScale(prvPoint.x);
-          var pY = yScale(prvPoint.y);
+          var nX = xScale(nextPoint.x);
+          var nY = yScale(nextPoint.y);
+
+          if(point.x%1!=0)
 
 
           if(addition.line){
-            context.beginPath();
+            // context.beginPath();
             context.lineTo(cx,cy);
-            context.lineTo(pX,cy);
-            context.lineTo(pX,pY);
+            context.lineTo(nX,cy);
+            context.lineTo(nX,nY);
             context.lineWidth= options.lineWidth;
             context.strokeStyle=options.lineColor;
+            // context.closePath();
             context.stroke();
-            context.closePath();
           }
-
-
 
           if(point.x %1 != 0){
             context.fillStyle="gray";

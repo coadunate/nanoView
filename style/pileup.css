@@ -192,7 +192,7 @@
 .pileup-root > .signalplot {
   flex: 1;  /* stretch to fill remaining space */
   flex-basis: auto;
-  min-height: 450px; /* prevent tracks from becoming too small */
+  min-height: 1030px; /* prevent tracks from becoming too small */
   padding-bottom: 50px;
 }
 
