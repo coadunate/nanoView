@@ -292,7 +292,7 @@
       xhttp.send();
       var eventData = [];
       var finalDataset = [];
-      for(var i = 0; i < result.length-1; i++){
+      for(var i = 0; i < result.length; i++){
         if(i%2!=0){
           var x = []; // contains [x,cigarStatus]
           var y = [];
@@ -329,17 +329,21 @@
       }
       finalReads = [];
       for(var x =0; x < eventData.length; x += 2){
-        var arr = [];
-        arr.push(eventData[x]);
-        arr.push(eventData[x+1]);
-        arr.push(result[x]);
-        finalReads.push(arr);
+        console.log(result[x])
+        if(result[x] == '1182ad2e-10aa-421a-8fd3-39256b62a11b'){
+          var arr = [];
+          arr.push(eventData[x]);
+          arr.push(eventData[x+1]);
+          arr.push(result[x]);
+          finalReads.push(arr);
+        }
       }
       return finalReads;
       // event.preventDefault();
     }
 
     resultEvent = getEventData(range);
+    console.log(resultEvent);
     var data = [];
     for(var x = 0; x < resultEvent.length; x++){
       var inter_data = [];
@@ -387,7 +391,7 @@
 
     });
     var xScale = d3.scale.linear()
-        .domain([3,10])
+        .domain([3,4])
         .range([0, width]);
 
     // var yScale = d3.scale.linear()
@@ -563,18 +567,19 @@
           var nX = xScale(nextPoint.x);
           var nY = yScale(nextPoint.y);
 
+          // console.log("POINTX: " + point.x);
 
 
-          // if(addition.line){
-          //   // context.beginPath();
-          //   context.lineTo(cx,cy);
-          //   context.lineTo(nX,cy);
-          //   context.lineTo(nX,nY);
-          //   context.lineWidth= options.lineWidth;
-          //   context.strokeStyle=options.lineColor;
-          //   // context.closePath();
-          //   context.stroke();
-          // }
+          if(addition.line){
+            // context.beginPath();
+            context.lineTo(cx,cy);
+            context.lineTo(nX,cy);
+            context.lineTo(nX,nY);
+            context.lineWidth= options.lineWidth;
+            context.strokeStyle=options.lineColor;
+            // context.closePath();
+            context.stroke();
+          }
 
           if(point.x %1 != 0){
             context.fillStyle="gray";
