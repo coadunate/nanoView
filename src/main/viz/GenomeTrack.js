@@ -17,9 +17,9 @@ import canvasUtils from './canvas-utils';
 import ContigInterval from '../ContigInterval';
 import dataCanvas from 'data-canvas';
 import d3utils from './d3utils';
-import DisplayMode from './DisplayMode';
+//import DisplayMode from './DisplayMode';
 import TiledCanvas from './TiledCanvas';
-import style from '../style';
+//import style from '../style';
 
 
 // function renderGenome(ctx: DataCanvasRenderingContext2D,
@@ -95,11 +95,11 @@ class GenomeTiledCanvas extends TiledCanvas {
          scale: (x: number)=>number,
          range: ContigInterval<string>) {
     // The +/-1 ensures that partially-visible bases on the edge are rendered.
-    var genomeRange = {
-      contig: range.contig,
-      start: Math.max(0, range.start() - 1),
-      stop: range.stop() + 1
-    };
+    // var genomeRange = {
+    //   contig: range.contig,
+    //   start: Math.max(0, range.start() - 1),
+    //   stop: range.stop() + 1
+    // };
     // var basePairs = this.source.getRangeAsString(genomeRange);
     // renderGenome(ctx, scale, this.height, ContigInterval.fromGenomeRange(genomeRange), basePairs);
   }
