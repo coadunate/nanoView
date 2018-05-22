@@ -9,6 +9,8 @@ addons = {
   width: 2
 }
 
+var IP_ADDRESS = '206.167.183.18';
+
 
 reA2012 = new RegExp('.*A2012.*');
 reAmes = new RegExp('.*Ames.*');
@@ -77,7 +79,7 @@ oneReadLambda.appendChild(document.createTextNode("1 Read Lambda"));
 mainButtons.appendChild(oneReadLambda);
 oneReadLambda.addEventListener('click',function(){
   removeRendering();
-  renderEventData('206.167.183.18','data-bp20',2,addons,[-2,82]);
+  renderEventData(IP_ADDRESS,'data-bp20',2,addons,[-2,82]);
   showButtons('any','data-bp20');
 });
 
@@ -86,7 +88,7 @@ sixReadLambda.appendChild(document.createTextNode("6 Read Lambda"));
 mainButtons.appendChild(sixReadLambda);
 sixReadLambda.addEventListener('click', function(){
   removeRendering();
-  renderEventData('206.167.183.18','tombo-may26',2,addons,[-2,82]);
+  renderEventData(IP_ADDRESS,'tombo-may26',2,addons,[-2,82]);
   showButtons('any','tombo-may26');
 });
 
@@ -95,7 +97,7 @@ salmonellaSNP.appendChild(document.createTextNode("Salmonella SNP"));
 mainButtons.appendChild(salmonellaSNP);
 salmonellaSNP.addEventListener('click',function(){
   removeRendering();
-  renderEventData('206.167.183.18','salmonella32',2,addons,null);
+  renderEventData(IP_ADDRESS,'salmonella32',2,addons,null);
   showButtons('any','salmonella32');
 });
 
@@ -104,7 +106,7 @@ BAnthracis.appendChild(document.createTextNode("B. anthracis."));
 mainButtons.appendChild(BAnthracis);
 BAnthracis.addEventListener('click',function(){
   removeRendering();
-  renderEventData('206.167.183.18','sim_dset',2,addons,null);
+  renderEventData(IP_ADDRESS,'sim_dset',2,addons,null);
   showButtons('any','sim_dset');
 });
 
@@ -113,7 +115,7 @@ phytoplasmaSNP.appendChild(document.createTextNode("Phytoplasma SNP"));
 mainButtons.appendChild(phytoplasmaSNP);
 phytoplasmaSNP.addEventListener('click',function(){
   removeRendering();
-  renderEventData('206.167.183.18','tombo-may26',2,addons,null);
+  renderEventData(IP_ADDRESS,'tombo-may26',2,addons,null);
   showButtons('any','tombo-may26');
 });
 
@@ -123,7 +125,7 @@ mainButtonsDiv.appendChild(tomboPlusRawButton);
 tomboPlusRawButton.addEventListener('click',function(){
   removeRendering();
   addons.non_basecalled = true;
-  renderEventData('206.167.183.18','tombo-may30',2,addons,[-2,82]);
+  renderEventData(IP_ADDRESS,'tombo-may30',2,addons,[-2,82]);
   showButtons('any','tombo-may30');
 });
 
@@ -132,7 +134,7 @@ sixReadTombo.appendChild(document.createTextNode("6 Read Lambda + TOMBO"));
 mainButtonsDiv.appendChild(sixReadTombo);
 sixReadTombo.addEventListener('click',function(){
   removeRendering();
-  renderEventData('206.167.183.18','tombo-may31',2,addons,[-2,82]);
+  renderEventData(IP_ADDRESS,'tombo-may31',2,addons,[-2,82]);
   showButtons('any','tombo-may31');
 });
 
@@ -164,7 +166,7 @@ function showButtons(dataset='none',dataset_name){
       removeRendering();
       addons.line = (addons.line+1)%3;
       b5.innerText="TOGGLE LINES: " + text;
-      renderEventData('206.167.183.18',dataset_name,2,addons,given_range);
+      renderEventData(IP_ADDRESS,dataset_name,2,addons,given_range);
       showButtons('any',dataset_name);
     });
 
@@ -175,7 +177,7 @@ function showButtons(dataset='none',dataset_name){
     b6.addEventListener('click',function(){
       removeRendering();
       addons.width = (addons.width+1)%3;
-      renderEventData('206.167.183.18',dataset_name,2,addons,given_range);
+      renderEventData(IP_ADDRESS,dataset_name,2,addons,given_range);
       showButtons('any',dataset_name);
 
     });
