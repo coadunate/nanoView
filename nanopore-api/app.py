@@ -78,12 +78,13 @@ def getrange(start, end, name):
 		if isfile(join(directory, i)):
 			with open(directory+"/"+i, 'rb') as infile:
 				record = pickle.load(infile)
-			mami.append(record[-1])
+	# 		mami.append(record[-1])
 			final_record +=   json.dumps(record[0]) + ","
 			final_record += json.dumps(record[(start_i*2)+1:(end_i*2)+1]) + ","
-	max_mami = max(mami,key=itemgetter(1))[0]
-	min_mami = min(mami,key=itemgetter(1))[1]
-	final_record += "["+max_mami+", "+min_mami+"]]"
+	# max_mami = max(mami,key=itemgetter(1))[0]
+	# min_mami = min(mami,key=itemgetter(1))[1]
+	# final_record += "["+max_mami+", "+min_mami+"]]"
+	final_record += "]"
 	return final_record, 201
 
 
@@ -184,8 +185,9 @@ def normed(name, directory, sam):
 			base = i.split('.fast')[0]
 			path = "./data/"+name+"/"+base+".normed.record"
 			f = Fast5Events(directory+"/"+i)
-			shift0, scale0, bprime0, b_a0, record = get_data(directory+'/'+i)
-			final_r = index_record(record)
+			shift0, scale0, bprime0, b_a0, record, mapped_start, bases = get_data(directory+'/'+i)
+			final_r0 = index_record(record, mapped_start)
+			final_r = base_record(final_r0, bases)
 			with open(path, 'wb') as outfile:
 				pickle.dump(record, outfile)
 	return json.dumps(final_r), 201
@@ -209,8 +211,8 @@ def get_data(file):
     scale = np.median(np.abs(b - shift))
     bprime = (b - shift)
     b_a = (b - shift) / scale
-    record = get_list_values(start, b_a, file)
-    return shift, scale, bprime, b_a, record
+    record, mapped_start, bases = get_list_values(start, b_a, file)
+    return shift, scale, bprime, b_a, record, mapped_start, bases
 
 
 def get_list_values(start, b_a, file):
@@ -218,30 +220,42 @@ def get_list_values(start, b_a, file):
     f = Fast5Events(file)
     qname = f.get_qname()
     offset = f.get_offset()
+    mapped_start = f.get_mapped_start()
+    bases = f.get_base()
     record.append(qname)
     counter = 0
     len_counter = 0
     sub0 = []
-    for i in range(offset, len(start)):
+    for i in range(0, len(start)):
         length = start[i][1]
-        sub0.append(i-int(offset))
+        sub0.append(i+int(offset)+int(mapped_start))
         sub1 = []
         for a in range(length):
-            sub1.append([b_a[a + start[i][0]]])
+            sub1.append([b_a[a + start[i][0]+offset]])
         sub0.append(sub1)
     record.append(sub0)
-    return record
+    return record, mapped_start, bases
 
 
-def index_record(record):
+def index_record(record, mapped_start):
 	c = 0
 	for item in record[1][1::2]:
 		length = len(item)
 		counter = 0
 		for i in item:
-			i.append(c + (float(counter)/float(length)))
+			i.append(c + (float(counter)/float(length))+int(mapped_start))
 			counter += 1
 		c += 1
+	return record
+
+
+def base_record(record, bases):
+	counter = 0
+	for item in record[1][1::2]:
+		base = bases[counter]
+		for i in item:
+			i.append(base.decode('utf-8'))
+		counter += 1
 	return record
 
 

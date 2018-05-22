@@ -288,6 +288,22 @@ class Fast5Events(object):
         return dset.attrs['read_start_rel_to_raw']
 
 
+    def get_mapped_start(self):
+        self.assert_events()
+
+        dset = '/Analyses/RawGenomeCorrected_000/BaseCalled_template/Alignment'
+        dset = self.handle[dset]
+        return dset.attrs['mapped_start']
+
+
+    def get_base(self):
+        self.assert_events()
+
+        dset = '/Analyses/RawGenomeCorrected_000/BaseCalled_template/Events'
+        dset = self.handle[dset]
+        return dset['base']
+
+
     def get_list_event_data(self,event_start = -1, event_end = -1, file_path=""):
         signal_index = self.get_mean_signal_index()
         time_index = self.get_start_time_index()
