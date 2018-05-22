@@ -22,62 +22,62 @@ import TiledCanvas from './TiledCanvas';
 import style from '../style';
 
 
-function renderGenome(ctx: DataCanvasRenderingContext2D,
-                      scale: (num: number) => number,
-                      height: number,
-                      range: ContigInterval<string>,
-                      basePairs: string) {
-  var pxPerLetter = scale(1) - scale(0);
-  var mode = DisplayMode.getDisplayMode(pxPerLetter);
-  var showText = DisplayMode.isText(mode);
-
-
-  if (mode != DisplayMode.HIDDEN) {
-    ctx.textAlign = 'center';
-    if (mode == DisplayMode.LOOSE) {
-      ctx.font = style.LOOSE_TEXT_STYLE;
-    } else if (mode == DisplayMode.TIGHT) {
-      ctx.font = style.TIGHT_TEXT_STYLE;
-    }
-
-    var previousBase = null;
-    var start = range.start(),
-        stop = range.stop();
-
-    for (var pos = start; pos <= stop; pos++) {
-      var letter = basePairs[pos - start];
-
-      if (letter == '.') continue;  // not yet known
-
-      ctx.save();
-      ctx.pushObject({pos, letter});
-      ctx.fillStyle = style.BASE_COLORS[letter];
-      if (showText) {
-        // We only push objects in the text case as it involves creating a
-        // new object & can become a performance issue.
-        // 0.5 = centered
-        ctx.fillText(letter, scale(1 + 0.5 + pos), height/2);
-        } else {
-        if (pxPerLetter >= style.COVERAGE_MIN_BAR_WIDTH_FOR_GAP) {
-          // We want a white space between blocks at this size, so we can see
-          // the difference between bases.
-          ctx.fillRect(scale(1 + pos) + 0.5, 0,  pxPerLetter - 1.5, height);
-        } else if (previousBase === letter) {
-          // Otherwise, we want runs of colors to be completely solid ...
-          ctx.fillRect(scale(1 + pos) - 1.5, 0, pxPerLetter + 1.5, height);
-        } else {
-          // ... and minimize the amount of smudging and whitespace between
-          // bases.
-          ctx.fillRect(scale(1 + pos) - 0.5, 0,  pxPerLetter + 1.5, height);
-        }
-      }
-
-      ctx.popObject();
-      ctx.restore();
-      previousBase = letter;
-    }
-  }
-}
+// function renderGenome(ctx: DataCanvasRenderingContext2D,
+//                       scale: (num: number) => number,
+//                       height: number,
+//                       range: ContigInterval<string>,
+//                       basePairs: string) {
+//   var pxPerLetter = scale(1) - scale(0);
+//   var mode = DisplayMode.getDisplayMode(pxPerLetter);
+//   var showText = DisplayMode.isText(mode);
+//
+//
+//   if (mode != DisplayMode.HIDDEN) {
+//     ctx.textAlign = 'center';
+//     if (mode == DisplayMode.LOOSE) {
+//       ctx.font = style.LOOSE_TEXT_STYLE;
+//     } else if (mode == DisplayMode.TIGHT) {
+//       ctx.font = style.TIGHT_TEXT_STYLE;
+//     }
+//
+//     var previousBase = null;
+//     var start = range.start(),
+//         stop = range.stop();
+//
+//     for (var pos = start; pos <= stop; pos++) {
+//       var letter = basePairs[pos - start];
+//
+//       if (letter == '.') continue;  // not yet known
+//
+//       ctx.save();
+//       ctx.pushObject({pos, letter});
+//       ctx.fillStyle = style.BASE_COLORS[letter];
+//       if (showText) {
+//         // We only push objects in the text case as it involves creating a
+//         // new object & can become a performance issue.
+//         // 0.5 = centered
+//         ctx.fillText(letter, scale(1 + 0.5 + pos), height/2);
+//         } else {
+//         if (pxPerLetter >= style.COVERAGE_MIN_BAR_WIDTH_FOR_GAP) {
+//           // We want a white space between blocks at this size, so we can see
+//           // the difference between bases.
+//           ctx.fillRect(scale(1 + pos) + 0.5, 0,  pxPerLetter - 1.5, height);
+//         } else if (previousBase === letter) {
+//           // Otherwise, we want runs of colors to be completely solid ...
+//           ctx.fillRect(scale(1 + pos) - 1.5, 0, pxPerLetter + 1.5, height);
+//         } else {
+//           // ... and minimize the amount of smudging and whitespace between
+//           // bases.
+//           ctx.fillRect(scale(1 + pos) - 0.5, 0,  pxPerLetter + 1.5, height);
+//         }
+//       }
+//
+//       ctx.popObject();
+//       ctx.restore();
+//       previousBase = letter;
+//     }
+//   }
+// }
 
 
 class GenomeTiledCanvas extends TiledCanvas {
@@ -100,8 +100,8 @@ class GenomeTiledCanvas extends TiledCanvas {
       start: Math.max(0, range.start() - 1),
       stop: range.stop() + 1
     };
-    var basePairs = this.source.getRangeAsString(genomeRange);
-    renderGenome(ctx, scale, this.height, ContigInterval.fromGenomeRange(genomeRange), basePairs);
+    // var basePairs = this.source.getRangeAsString(genomeRange);
+    // renderGenome(ctx, scale, this.height, ContigInterval.fromGenomeRange(genomeRange), basePairs);
   }
 
   heightForRef(ref: string): number {
