@@ -1,12 +1,6 @@
 # nanoView
 > Data Visualization tool for nanopore sequencing data.
 
-[![NPM Version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Downloads Stats][npm-downloads]][npm-url]
-
-One to two paragraph statement about your product and what it does.
-
 ![](cover.png)
 
 
@@ -19,36 +13,28 @@ One to two paragraph statement about your product and what it does.
 
 ## Installation
 
-OS X & Linux:
-
 ```sh
-$ git clone https://github.com/coadunate/nanoView.github
+$ git clone https://github.com/coadunate/nanoView.git
 $ cd nanoView
 $ npm install
 $ npm run build
 ```
 ## Deployment
 
-Run the following command to serve the application on `http-server`
+- Before running the application, the API needs to be deployed which generates the data for the visualization. Make sure that you are in nanoView directory.
+
+```sh
+$ python3 ./nanopore-api/app.py
+```
+
+- Run the following command to serve the application on `http-server`
 
 ```sh
 $ npm run http-server
 ```
-Then open http://localhost:8080 in your browser of choice.
-
-## Usage example
-
-A few motivating and useful examples of how your product can be used. Spice this up with code blocks and potentially more screenshots.
+Then open http://127.0.0.1:8080/examples/ in your browser of choice (preferably Chrome).
 
 
 ## API
 
 Write about the function of API in this program and how it can be used.
-
-<!-- Markdown link & img dfn's -->
-[npm-image]: https://img.shields.io/npm/v/datadog-metrics.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/datadog-metrics
-[npm-downloads]: https://img.shields.io/npm/dm/datadog-metrics.svg?style=flat-square
-[travis-image]: https://img.shields.io/travis/dbader/node-datadog-metrics/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/dbader/node-datadog-metrics
-[wiki]: https://github.com/yourname/yourproject/wiki
