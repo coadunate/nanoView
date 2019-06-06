@@ -41,4 +41,8 @@ var sources = [
   //   name: 'Alignments'
   // }
 ];
+<<<<<<< HEAD
 var range = {contig: 'burn-in', start: 2, stop: 80};
+=======
+var range = {contig: 'burn-in', start: 1, stop: 20};
+>>>>>>> parent of 5fbf48d... change filenames
