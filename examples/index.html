@@ -107,7 +107,7 @@
       var result = [];
       var xhttp = new XMLHttpRequest();
 
-      xhttp.open("GET", "http://localhost:5000/getrange/start=" + range.start + "&end=" + (range.stop+1) + "&name=Testjson1", false);
+      xhttp.open("GET", "http://localhost:5000/getrange/start=" + range.start + "&end=" + (range.stop+1) + "&name=semifinaldataset", false);
       xhttp.onload = function() {
         result = JSON.parse(xhttp.responseText);
 
